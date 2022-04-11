@@ -2,8 +2,14 @@ package ayds.lisboa.songinfo.home.view
 
 import ayds.lisboa.songinfo.home.model.entities.Song
 
-object DateResolver {
-    fun releaseDateText(song: Song): String=
+interface DateResolver {
+
+    fun releaseDateText(song: Song): String
+
+}
+
+internal class DateResolverImpl: DateResolver {
+    override fun releaseDateText(song: Song): String=
         when (song.releaseDatePrecision) {
             "day" -> precisionDay(song.releaseDate)
             "month" -> precisionMonth(song.releaseDate)

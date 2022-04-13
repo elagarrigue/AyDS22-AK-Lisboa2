@@ -9,6 +9,9 @@ interface DateResolver {
 }
 
 internal class DateResolverImpl: DateResolver {
+
+	private val months = arrayOf("January","February", "March","April", "May", "June","July","August","September","October","November","December")
+
     override fun releaseDateText(song: Song): String=
         when (song.releaseDatePrecision) {
             "day" -> precisionDay(song.releaseDate)
@@ -17,12 +20,20 @@ internal class DateResolverImpl: DateResolver {
             else -> ""
         }
 
-    private fun precisionDay(date: String): String =
-        "${date.split("-")[2]}/${date.split("-")[1]}/${date.split("-")[0]}"
+    private fun precisionDay(date: String): String {
+        val dateSplit = date.split("-")
+        val day = dateSplit[2]
+        val month = dateSplit[1]
+        val year = dateSplit[0]
+        return "$day/$month/$year"
+    }
+
 
     private fun precisionMonth(date: String): String {
-        val months = arrayOf("January","February", "March","April", "May", "June","July","August","September","October","November","December")
-        return "${months[date.split("-")[1].toInt()-1]}, ${date.split("-")[0]}"
+        val dateSplit = date.split("-")
+        val month = months[dateSplit[1].toInt()-1]
+        val year = dateSplit[0]
+        return "$month, $year"
     }
 
     private fun precisionYear(date: String): String =

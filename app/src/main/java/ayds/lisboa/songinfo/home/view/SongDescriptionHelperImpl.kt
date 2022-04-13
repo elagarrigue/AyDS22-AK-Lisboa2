@@ -10,9 +10,7 @@ interface SongDescriptionHelper {
     fun getSongDescriptionText(song: Song = EmptySong): String
 }
 
-internal class SongDescriptionHelperImpl : SongDescriptionHelper {
-
-    private val dateResolver: DateResolver = HomeViewInjector.dateResolver
+internal class SongDescriptionHelperImpl(private val dateResolver : DateResolver) : SongDescriptionHelper {
 
     override fun getSongDescriptionText(song: Song): String {
         return when (song) {

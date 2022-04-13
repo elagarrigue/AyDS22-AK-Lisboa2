@@ -35,7 +35,6 @@ class HomeViewActivity : AppCompatActivity(), HomeView {
 
     private val onActionSubject = Subject<HomeUiEvent>()
     private lateinit var homeModel: HomeModel
-    private val dateResolver: DateResolver = DateResolverInjector.DateResolver
     private val songDescriptionHelper: SongDescriptionHelper = HomeViewInjector.songDescriptionHelper
     private val imageLoader: ImageLoader = UtilsInjector.imageLoader
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
@@ -69,11 +68,6 @@ class HomeViewActivity : AppCompatActivity(), HomeView {
         initListeners()
         initObservers()
         updateSongImage()
-        initSongDescriptionHelper()
-    }
-
-    private fun initSongDescriptionHelper(){
-        songDescriptionHelper.setDateResolver(dateResolver)
     }
 
     private fun initModule() {

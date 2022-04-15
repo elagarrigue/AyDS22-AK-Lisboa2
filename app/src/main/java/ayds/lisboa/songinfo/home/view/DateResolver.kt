@@ -28,7 +28,6 @@ internal class DateResolverImpl: DateResolver {
         return "$day/$month/$year"
     }
 
-
     private fun precisionMonth(date: String): String {
         val dateSplit = date.split("-")
         val month = months[dateSplit[1].toInt()-1]
@@ -43,7 +42,6 @@ internal class DateResolverImpl: DateResolver {
             else
                 "(not a leap year)"
         }"
-
 
     private fun isALeapYear(year: Int) : Boolean =
         ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)

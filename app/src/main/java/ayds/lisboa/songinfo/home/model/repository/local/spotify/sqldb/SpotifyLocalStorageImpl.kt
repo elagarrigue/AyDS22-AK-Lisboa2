@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import ayds.lisboa.songinfo.home.model.entities.SpotifySong
 import ayds.lisboa.songinfo.home.model.repository.local.spotify.SpotifyLocalStorage
 
-private const val DATABASE_VERSION = 2
+private const val DATABASE_VERSION = 1
 private const val DATABASE_NAME = "songs.db"
 
 internal class SpotifyLocalStorageImpl(
@@ -33,8 +33,6 @@ internal class SpotifyLocalStorageImpl(
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS  $SONGS_TABLE")
-        onCreate(db)
     }
 
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

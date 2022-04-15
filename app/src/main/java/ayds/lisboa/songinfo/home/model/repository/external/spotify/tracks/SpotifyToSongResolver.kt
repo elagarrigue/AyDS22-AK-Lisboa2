@@ -3,6 +3,7 @@ package ayds.lisboa.songinfo.home.model.repository.external.spotify.tracks
 import com.google.gson.Gson
 import ayds.lisboa.songinfo.home.model.entities.SpotifySong
 import com.google.gson.JsonObject
+import ayds.lisboa.songinfo.home.model.DatePrecision
 
 interface SpotifyToSongResolver {
     fun getSongFromExternalData(serviceData: String?): SpotifySong?
@@ -61,9 +62,10 @@ internal class JsonToSongResolver : SpotifyToSongResolver {
         return album[RELEASE_DATE].asString
     }
 
-    private fun JsonObject.getReleaseDatePrecision(): String {
+    private fun JsonObject.getReleaseDatePrecision(): DatePrecision {
         val album = this[ALBUM].asJsonObject
-        return album[RELEASE_DATE_PRECISION].asString
+        val precision = album[RELEASE_DATE_PRECISION].asString.uppercase()
+        return DatePrecision.valueOf(precision)
     }
 
     private fun JsonObject.getImageUrl(): String {
@@ -75,6 +77,4 @@ internal class JsonToSongResolver : SpotifyToSongResolver {
         val externalUrl = this[EXTERNAL_URL].asJsonObject
         return externalUrl[SPOTIFY].asString
     }
-
-
 }

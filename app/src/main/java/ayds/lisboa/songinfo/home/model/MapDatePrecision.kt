@@ -7,11 +7,15 @@ interface MapDatePrecision {
 
 internal class MapDatePrecisionImpl : MapDatePrecision {
 
+    private val precisionDay = "day"
+    private val precisionMonth = "month"
+    private val precisionYear = "year"
+
     override fun getDatePrecision(precision: String): DatePrecision =
         when (precision) {
-            "day" -> DatePrecision.DAY
-            "month" -> DatePrecision.MONTH
-            "year" -> DatePrecision.YEAR
+            precisionDay -> DatePrecision.DAY
+            precisionMonth -> DatePrecision.MONTH
+            precisionYear -> DatePrecision.YEAR
             else -> throw Exception("Date precision invalid.")
         }
 }

@@ -13,6 +13,7 @@ import ayds.lisboa.songinfo.home.view.HomeView
 object HomeModelInjector {
 
     private lateinit var homeModel: HomeModel
+    val mapDatePrecision : MapDatePrecision = MapDatePrecisionImpl()
 
     fun getHomeModel(): HomeModel = homeModel
 

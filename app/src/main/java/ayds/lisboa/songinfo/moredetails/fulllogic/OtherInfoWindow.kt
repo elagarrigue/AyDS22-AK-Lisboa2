@@ -37,43 +37,13 @@ class OtherInfoWindow : AppCompatActivity() {
 
     fun getARtistInfo(artistName: String?) {
 
-        val lastFMAPI = createRetrofit().create(LastFMAPI::class.java)
         Log.e("TAG", "artistName $artistName")
         Thread {
             var artistInfo = getArtistInfoFromDataBase(artistName)
             if (existInDataBase(artistInfo)) {
                 artistInfo = "[*]$artistInfo"
             } else { // get from service
-                val callResponse: Response<String>
-                try {
-                    callResponse = lastFMAPI.getArtistInfo(artistName).execute()
-                    Log.e("TAG", "JSON " + callResponse.body())
-                    val gson = Gson()
-                    val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
-                    val artist = jobj["artist"].asJsonObject
-                    val bio = artist["bio"].asJsonObject
-                    val extract = bio["content"]
-                    val url = artist["url"]
-                    if (extract == null) {
-                        artistInfo = "No Results"
-                    } else {
-                        artistInfo = extract.asString.replace("\\n", "\n")
-                        artistInfo = textToHtml(artistInfo, artistName)
-
-
-                        // save to DB  <o/
-                        DataBase.saveArtist(dataBase, artistName, artistInfo)
-                    }
-                    val urlString = url.asString
-                    findViewById<View>(R.id.openUrlButton).setOnClickListener {
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(urlString)
-                        startActivity(intent)
-                    }
-                } catch (e1: IOException) {
-                    Log.e("TAG", "Error $e1")
-                    e1.printStackTrace()
-                }
+                artistInfo = getArtistInfoFromService(artistName)
             }
             val imageUrl =
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
@@ -86,16 +56,58 @@ class OtherInfoWindow : AppCompatActivity() {
         }.start()
     }
 
-    private fun createRetrofit() = Retrofit.Builder()
-            .baseUrl("https://ws.audioscrobbler.com/2.0/")
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
+    private fun createRetrofit() =
+        Retrofit.Builder()
+        .baseUrl("https://ws.audioscrobbler.com/2.0/")
+        .addConverterFactory(ScalarsConverterFactory.create())
+        .build()
 
     private fun getArtistInfoFromDataBase(artistName: String?) =
         DataBase.getInfo(dataBase, artistName)
 
     private fun existInDataBase(artistInfo: String?) =
         artistInfo != null
+
+    private fun getArtistInfoFromService(artistName: String?): String? {
+
+        var artistInfo: String = ""
+        val callResponse: Response<String>
+
+        try {
+            callResponse = createLastFMAPI().getArtistInfo(artistName).execute()
+            Log.e("TAG", "JSON " + callResponse.body())
+            val gson = Gson()
+            val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
+            val artist = jobj["artist"].asJsonObject
+            val bio = artist["bio"].asJsonObject
+            val extract = bio["content"]
+            val url = artist["url"]
+            if (extract == null) {
+                artistInfo = "No Results"
+            } else {
+                artistInfo = extract.asString.replace("\\n", "\n")
+                artistInfo = textToHtml(artistInfo, artistName)
+
+
+                // save to DB  <o/
+                DataBase.saveArtist(dataBase, artistName, artistInfo)
+            }
+            val urlString = url.asString
+            findViewById<View>(R.id.openUrlButton).setOnClickListener {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse(urlString)
+                startActivity(intent)
+            }
+        } catch (e1: IOException) {
+            Log.e("TAG", "Error $e1")
+            e1.printStackTrace()
+        }
+
+        return artistInfo
+    }
+
+    private fun createLastFMAPI() =
+        createRetrofit().create(LastFMAPI::class.java)
 
     private var dataBase: DataBase? = null
     private fun open(artist: String?) {

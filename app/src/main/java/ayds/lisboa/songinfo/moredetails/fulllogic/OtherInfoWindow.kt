@@ -73,16 +73,12 @@ class OtherInfoWindow : AppCompatActivity() {
         var artistInfo: String = ""
 
         try {
-            Log.e("TAG", "JSON " + getResponseFromService().body())
-            val jobj = Gson().fromJson(getResponseFromService().body(), JsonObject::class.java)
-            val artist = jobj["artist"].asJsonObject
-            val bio = artist["bio"].asJsonObject
-            val extract = bio["content"]
+            val artistBiography = getArtistBiography(artistName)
             val url = artist["url"]
-            if (extract == null) {
+            if (artistBiography == null) {
                 artistInfo = "No Results"
             } else {
-                artistInfo = extract.asString.replace("\\n", "\n")
+                artistInfo = artistBiography.asString.replace("\\n", "\n")
                 artistInfo = textToHtml(artistInfo, artistName)
 
 
@@ -108,6 +104,18 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getResponseFromService(artistName: String?) : Response<String> =
         createLastFMAPI().getArtistInfo(artistName).execute()
+
+    private fun getArtistBiography(artistName: String?): JsonElement {
+
+        val artistBiography = getArtist(artistName)["bio"].asJsonObject
+        return artistBiography["content"]
+    }
+
+    private fun getArtist(artistName: String?): JsonObject {
+
+        val jobj = Gson().fromJson(getResponseFromService(artistName).body(), JsonObject::class.java)
+        return jobj["artist"].asJsonObject
+    }
 
     private var dataBase: DataBase? = null
     private fun open(artist: String?) {

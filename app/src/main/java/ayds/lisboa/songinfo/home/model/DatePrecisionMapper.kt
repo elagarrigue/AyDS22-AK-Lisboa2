@@ -1,11 +1,11 @@
 package ayds.lisboa.songinfo.home.model
 
-interface MapDatePrecision {
+interface DatePrecisionMapper {
 
     fun getDatePrecision(precision: String) : DatePrecision
 }
 
-internal class MapDatePrecisionImpl : MapDatePrecision {
+internal class DatePrecisionMapperImpl : DatePrecisionMapper {
 
     private val precisionDay = "day"
     private val precisionMonth = "month"

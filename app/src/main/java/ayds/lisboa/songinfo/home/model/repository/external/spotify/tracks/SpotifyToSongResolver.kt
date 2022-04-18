@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import ayds.lisboa.songinfo.home.model.entities.SpotifySong
 import com.google.gson.JsonObject
 import ayds.lisboa.songinfo.home.model.DatePrecision
-import ayds.lisboa.songinfo.home.model.HomeModelInjector
+import ayds.lisboa.songinfo.home.model.DatePrecisionMapper
 
 interface SpotifyToSongResolver {
     fun getSongFromExternalData(serviceData: String?): SpotifySong?
@@ -66,8 +66,7 @@ internal class JsonToSongResolver : SpotifyToSongResolver {
     private fun JsonObject.getReleaseDatePrecision(): DatePrecision {
         val album = this[ALBUM].asJsonObject
         val precision = album[RELEASE_DATE_PRECISION].asString
-        val mapDatePrecision = HomeModelInjector.mapDatePrecision
-        return mapDatePrecision.getDatePrecision(precision)
+        return datePrecisionMapper.getDatePrecision(precision)
     }
 
     private fun JsonObject.getImageUrl(): String {

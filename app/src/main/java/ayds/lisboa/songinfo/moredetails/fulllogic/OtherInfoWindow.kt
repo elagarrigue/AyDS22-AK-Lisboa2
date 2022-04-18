@@ -71,13 +71,10 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun getArtistInfoFromService(artistName: String?): String? {
 
         var artistInfo: String = ""
-        val callResponse: Response<String>
 
         try {
-            callResponse = createLastFMAPI().getArtistInfo(artistName).execute()
-            Log.e("TAG", "JSON " + callResponse.body())
-            val gson = Gson()
-            val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
+            Log.e("TAG", "JSON " + getResponseFromService().body())
+            val jobj = Gson().fromJson(getResponseFromService().body(), JsonObject::class.java)
             val artist = jobj["artist"].asJsonObject
             val bio = artist["bio"].asJsonObject
             val extract = bio["content"]
@@ -108,6 +105,9 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun createLastFMAPI() =
         createRetrofit().create(LastFMAPI::class.java)
+
+    private fun getResponseFromService(artistName: String?) : Response<String> =
+        createLastFMAPI().getArtistInfo(artistName).execute()
 
     private var dataBase: DataBase? = null
     private fun open(artist: String?) {

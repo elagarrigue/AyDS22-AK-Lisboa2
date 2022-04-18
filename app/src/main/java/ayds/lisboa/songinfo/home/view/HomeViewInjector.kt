@@ -5,7 +5,8 @@ import ayds.lisboa.songinfo.home.model.HomeModelInjector
 
 object HomeViewInjector {
 
-    val songDescriptionHelper: SongDescriptionHelper = SongDescriptionHelperImpl()
+    private val dateResolver: DateResolver = DateResolverImpl()
+    val songDescriptionHelper: SongDescriptionHelper = SongDescriptionHelperImpl(dateResolver)
 
     fun init(homeView: HomeView) {
         HomeModelInjector.initHomeModel(homeView)

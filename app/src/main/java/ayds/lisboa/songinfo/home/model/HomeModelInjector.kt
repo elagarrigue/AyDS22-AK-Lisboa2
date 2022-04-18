@@ -13,7 +13,7 @@ import ayds.lisboa.songinfo.home.view.HomeView
 object HomeModelInjector {
 
     private lateinit var homeModel: HomeModel
-
+    
     fun getHomeModel(): HomeModel = homeModel
 
     fun initHomeModel(homeView: HomeView) {

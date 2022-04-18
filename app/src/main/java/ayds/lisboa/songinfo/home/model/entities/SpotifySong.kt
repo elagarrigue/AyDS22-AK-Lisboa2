@@ -1,29 +1,30 @@
 package ayds.lisboa.songinfo.home.model.entities
 
+import ayds.lisboa.songinfo.home.model.DatePrecision
+
 interface Song {
     val id: String
     val songName: String
     val artistName: String
     val albumName: String
     val releaseDate: String
+    val releaseDatePrecision: DatePrecision
     val spotifyUrl: String
     val imageUrl: String
     var isLocallyStored: Boolean
 }
 
 data class SpotifySong(
-  override val id: String,
-  override val songName: String,
-  override val artistName: String,
-  override val albumName: String,
-  override val releaseDate: String,
-  override val spotifyUrl: String,
-  override val imageUrl: String,
-  override var isLocallyStored: Boolean = false
-) : Song {
-
-    val year: String = releaseDate.split("-").first()
-}
+    override val id: String,
+    override val songName: String,
+    override val artistName: String,
+    override val albumName: String,
+    override val releaseDate: String,
+    override val releaseDatePrecision: DatePrecision,
+    override val spotifyUrl: String,
+    override val imageUrl: String,
+    override var isLocallyStored: Boolean = false
+) : Song
 
 object EmptySong : Song {
     override val id: String = ""
@@ -31,6 +32,7 @@ object EmptySong : Song {
     override val artistName: String = ""
     override val albumName: String = ""
     override val releaseDate: String = ""
+    override val releaseDatePrecision: DatePrecision = DatePrecision.DAY
     override val spotifyUrl: String = ""
     override val imageUrl: String = ""
     override var isLocallyStored: Boolean = false

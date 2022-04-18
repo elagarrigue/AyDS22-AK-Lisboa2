@@ -3,6 +3,8 @@ package ayds.lisboa.songinfo.home.model.repository.external.spotify.tracks
 import com.google.gson.Gson
 import ayds.lisboa.songinfo.home.model.entities.SpotifySong
 import com.google.gson.JsonObject
+import ayds.lisboa.songinfo.home.model.DatePrecision
+import ayds.lisboa.songinfo.home.model.DatePrecisionMapper
 
 interface SpotifyToSongResolver {
     fun getSongFromExternalData(serviceData: String?): SpotifySong?
@@ -19,15 +21,16 @@ private const val RELEASE_DATE = "release_date"
 private const val URL = "url"
 private const val EXTERNAL_URL = "external_urls"
 private const val SPOTIFY = "spotify"
+private const val RELEASE_DATE_PRECISION = "release_date_precision"
 
-internal class JsonToSongResolver : SpotifyToSongResolver {
+internal class JsonToSongResolver (private val datePrecisionMapper: DatePrecisionMapper): SpotifyToSongResolver {
 
     override fun getSongFromExternalData(serviceData: String?): SpotifySong? =
         try {
             serviceData?.getFirstItem()?.let { item ->
                 SpotifySong(
                   item.getId(), item.getSongName(), item.getArtistName(), item.getAlbumName(),
-                  item.getReleaseDate(), item.getSpotifyUrl(), item.getImageUrl()
+                  item.getReleaseDate(), item.getReleaseDatePrecision(),item.getSpotifyUrl(), item.getImageUrl(),
                 )
             }
         } catch (e: Exception) {
@@ -60,6 +63,12 @@ internal class JsonToSongResolver : SpotifyToSongResolver {
         return album[RELEASE_DATE].asString
     }
 
+    private fun JsonObject.getReleaseDatePrecision(): DatePrecision {
+        val album = this[ALBUM].asJsonObject
+        val precision = album[RELEASE_DATE_PRECISION].asString
+        return datePrecisionMapper.getDatePrecision(precision)
+    }
+
     private fun JsonObject.getImageUrl(): String {
         val album = this[ALBUM].asJsonObject
         return album[IMAGES].asJsonArray[1].asJsonObject[URL].asString
@@ -69,5 +78,4 @@ internal class JsonToSongResolver : SpotifyToSongResolver {
         val externalUrl = this[EXTERNAL_URL].asJsonObject
         return externalUrl[SPOTIFY].asString
     }
-
 }

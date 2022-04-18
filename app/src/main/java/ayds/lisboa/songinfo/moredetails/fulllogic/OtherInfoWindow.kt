@@ -74,21 +74,20 @@ class OtherInfoWindow : AppCompatActivity() {
 
         try {
             val artistBiography = getArtistBiography(artistName)
-            val url = artist["url"]
-            if (artistBiography == null) {
-                artistInfo = "No Results"
-            } else {
+
+            if (existInService(artistBiography)) {
                 artistInfo = artistBiography.asString.replace("\\n", "\n")
                 artistInfo = textToHtml(artistInfo, artistName)
 
 
                 // save to DB  <o/
                 DataBase.saveArtist(dataBase, artistName, artistInfo)
+            } else {
+                artistInfo = "No Results"
             }
-            val urlString = url.asString
             findViewById<View>(R.id.openUrlButton).setOnClickListener {
                 val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(urlString)
+                intent.data = Uri.parse(getArtistBiographyURL(artistName))
                 startActivity(intent)
             }
         } catch (e1: IOException) {
@@ -111,11 +110,17 @@ class OtherInfoWindow : AppCompatActivity() {
         return artistBiography["content"]
     }
 
+    private fun getArtistBiographyURL(artistName: String?): String =
+        getArtist(artistName)["url"].asString
+
     private fun getArtist(artistName: String?): JsonObject {
 
         val jobj = Gson().fromJson(getResponseFromService(artistName).body(), JsonObject::class.java)
         return jobj["artist"].asJsonObject
     }
+
+    private fun existInService(artistBiography: JsonElement?) =
+        artistBiography != null
 
     private var dataBase: DataBase? = null
     private fun open(artist: String?) {

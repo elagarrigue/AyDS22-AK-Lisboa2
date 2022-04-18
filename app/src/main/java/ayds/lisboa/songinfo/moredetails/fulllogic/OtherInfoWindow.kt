@@ -37,13 +37,12 @@ class OtherInfoWindow : AppCompatActivity() {
 
     fun getARtistInfo(artistName: String?) {
 
-        val retrofit = createRetrofit()
-        val lastFMAPI = retrofit.create(LastFMAPI::class.java)
+        val lastFMAPI = createRetrofit().create(LastFMAPI::class.java)
         Log.e("TAG", "artistName $artistName")
         Thread {
-            var text = DataBase.getInfo(dataBase, artistName)
-            if (text != null) { // exists in db
-                text = "[*]$text"
+            var artistInfo = getArtistInfoFromDataBase(artistName)
+            if (existInDataBase(artistInfo)) {
+                artistInfo = "[*]$artistInfo"
             } else { // get from service
                 val callResponse: Response<String>
                 try {
@@ -56,14 +55,14 @@ class OtherInfoWindow : AppCompatActivity() {
                     val extract = bio["content"]
                     val url = artist["url"]
                     if (extract == null) {
-                        text = "No Results"
+                        artistInfo = "No Results"
                     } else {
-                        text = extract.asString.replace("\\n", "\n")
-                        text = textToHtml(text, artistName)
+                        artistInfo = extract.asString.replace("\\n", "\n")
+                        artistInfo = textToHtml(artistInfo, artistName)
 
 
                         // save to DB  <o/
-                        DataBase.saveArtist(dataBase, artistName, text)
+                        DataBase.saveArtist(dataBase, artistName, artistInfo)
                     }
                     val urlString = url.asString
                     findViewById<View>(R.id.openUrlButton).setOnClickListener {
@@ -79,7 +78,7 @@ class OtherInfoWindow : AppCompatActivity() {
             val imageUrl =
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
             Log.e("TAG", "Get Image from $imageUrl")
-            val finalText = text
+            val finalText = artistInfo
             runOnUiThread {
                 Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
                 textPane2!!.text = Html.fromHtml(finalText)
@@ -92,6 +91,11 @@ class OtherInfoWindow : AppCompatActivity() {
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
 
+    private fun getArtistInfoFromDataBase(artistName: String?) =
+        DataBase.getInfo(dataBase, artistName)
+
+    private fun existInDataBase(artistInfo: String?) =
+        artistInfo != null
 
     private var dataBase: DataBase? = null
     private fun open(artist: String?) {

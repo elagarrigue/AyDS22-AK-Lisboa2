@@ -6,12 +6,9 @@ import android.os.Bundle
 import ayds.lisboa.songinfo.R
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import ayds.lisboa.songinfo.moredetails.fulllogic.LastFMAPI
-import ayds.lisboa.songinfo.moredetails.fulllogic.DataBase
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonElement
-import ayds.lisboa.songinfo.moredetails.fulllogic.OtherInfoWindow
 import android.content.Intent
 import android.net.Uri
 import com.squareup.picasso.Picasso
@@ -58,9 +55,9 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun createRetrofit() =
         Retrofit.Builder()
-        .baseUrl("https://ws.audioscrobbler.com/2.0/")
-        .addConverterFactory(ScalarsConverterFactory.create())
-        .build()
+            .baseUrl("https://ws.audioscrobbler.com/2.0/")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
 
     private fun getArtistInfoFromDataBase(artistName: String?) =
         DataBase.getInfo(dataBase, artistName)
@@ -73,21 +70,18 @@ class OtherInfoWindow : AppCompatActivity() {
         var artistInfo: String = ""
 
         try {
-            val artistBiography = getArtistBiography(artistName)
-
+            val queryArtistInfo = getQueryBodyArtistInfoFromService(artistName)
+            val artistBiography = getArtistBiography(queryArtistInfo)
             if (existInService(artistBiography)) {
-                artistInfo = artistBiography.asString.replace("\\n", "\n")
+                artistInfo = addLineBreaks(artistBiography)
                 artistInfo = textToHtml(artistInfo, artistName)
-
-
-                // save to DB  <o/
-                DataBase.saveArtist(dataBase, artistName, artistInfo)
+                saveArtistInDataBase(artistName,artistInfo)
             } else {
                 artistInfo = "No Results"
             }
             findViewById<View>(R.id.openUrlButton).setOnClickListener {
                 val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(getArtistBiographyURL(artistName))
+                intent.data = Uri.parse(getArtistBiographyURL(queryArtistInfo))
                 startActivity(intent)
             }
         } catch (e1: IOException) {
@@ -101,26 +95,33 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun createLastFMAPI() =
         createRetrofit().create(LastFMAPI::class.java)
 
-    private fun getResponseFromService(artistName: String?) : Response<String> =
+    private fun getQueryBodyArtistInfoFromService(artistName: String?) =
+        Gson().fromJson(getQueryResponseArtistInfoFromService(artistName).body(), JsonObject::class.java)
+
+    private fun getQueryResponseArtistInfoFromService(artistName: String?) : Response<String> =
         createLastFMAPI().getArtistInfo(artistName).execute()
 
-    private fun getArtistBiography(artistName: String?): JsonElement {
+    private fun getArtistBiography(jobj: JsonObject): JsonElement {
 
-        val artistBiography = getArtist(artistName)["bio"].asJsonObject
+        val artistBiography = getArtist(jobj)["bio"].asJsonObject
         return artistBiography["content"]
     }
 
-    private fun getArtistBiographyURL(artistName: String?): String =
-        getArtist(artistName)["url"].asString
+    private fun getArtistBiographyURL(jobj: JsonObject): String =
+        getArtist(jobj)["url"].asString
 
-    private fun getArtist(artistName: String?): JsonObject {
-
-        val jobj = Gson().fromJson(getResponseFromService(artistName).body(), JsonObject::class.java)
-        return jobj["artist"].asJsonObject
-    }
+    private fun getArtist(jobj: JsonObject): JsonObject =
+        jobj["artist"].asJsonObject
 
     private fun existInService(artistBiography: JsonElement?) =
         artistBiography != null
+
+    private fun addLineBreaks(artistBiography: JsonElement) : String =
+        artistBiography.asString.replace("\\n", "\n")
+
+    private fun saveArtistInDataBase(artistName: String?, artistInfo: String) {
+        DataBase.saveArtist(dataBase, artistName, artistInfo)
+    }
 
     private var dataBase: DataBase? = null
     private fun open(artist: String?) {

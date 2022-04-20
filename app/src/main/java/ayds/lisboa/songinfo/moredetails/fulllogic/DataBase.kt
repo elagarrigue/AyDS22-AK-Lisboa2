@@ -91,15 +91,14 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
                 null,  // don't filter by row groups
                 sortOrder // The sort order
             )
-            val items: MutableList<String> = ArrayList()
-            while (cursor.moveToNext()) {
-                val info = cursor.getString(
+            var artistInfo = ""
+            if (cursor.moveToNext()) {
+                artistInfo = cursor.getString(
                     cursor.getColumnIndexOrThrow("info")
                 )
-                items.add(info)
             }
             cursor.close()
-            return if (items.isEmpty()) null else items[0]
+            return artistInfo
         }
     }
 }

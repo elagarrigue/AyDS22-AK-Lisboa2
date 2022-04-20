@@ -9,6 +9,7 @@ import android.util.Log
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import java.sql.Statement
 import java.util.ArrayList
 
 class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
@@ -23,13 +24,9 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
 
     companion object {
         fun testDB() {
-            var connection: Connection? = null
+            var connection= createDBConnection()
             try {
-                connection = DriverManager.getConnection("jdbc:sqlite:./dictionary.db")
-                val statement = connection.createStatement()
-                statement.queryTimeout = 30 
-
-                val rs = statement.executeQuery("select * from artists")
+                val rs = createDBStatement(connection).executeQuery("select * from artists")
                 while (rs.next()) {
                     println("id = " + rs.getInt("id"))
                     println("artist = " + rs.getString("artist"))
@@ -45,6 +42,18 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
                     System.err.println(e)
                 }
             }
+        }
+
+        private fun createDBConnection():Connection{
+            var connection: Connection? = null
+            connection = DriverManager.getConnection("jdbc:sqlite:./dictionary.db")
+            return connection
+        }
+
+        private fun createDBStatement(connection: Connection):Statement{
+            val statement = connection.createStatement()
+            statement.queryTimeout = 30
+            return statement
         }
 
         @JvmStatic

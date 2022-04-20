@@ -53,12 +53,6 @@ class OtherInfoWindow : AppCompatActivity() {
         }.start()
     }
 
-    private fun createRetrofit() =
-        Retrofit.Builder()
-            .baseUrl("https://ws.audioscrobbler.com/2.0/")
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-
     private fun getArtistInfoFromDataBase(artistName: String?) =
         DataBase.getInfo(dataBase, artistName)
 
@@ -79,11 +73,7 @@ class OtherInfoWindow : AppCompatActivity() {
             } else {
                 artistInfo = "No Results"
             }
-            findViewById<View>(R.id.openUrlButton).setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(getArtistBiographyURL(queryArtistInfo))
-                startActivity(intent)
-            }
+            setOnClickerListenerToOpenURLButton(queryArtistInfo)
         } catch (e1: IOException) {
             Log.e("TAG", "Error $e1")
             e1.printStackTrace()
@@ -92,14 +82,28 @@ class OtherInfoWindow : AppCompatActivity() {
         return artistInfo
     }
 
-    private fun createLastFMAPI() =
-        createRetrofit().create(LastFMAPI::class.java)
+    private fun setOnClickerListenerToOpenURLButton(queryArtistInfo: JsonObject) {
+        findViewById<View>(R.id.openUrlButton).setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(getArtistBiographyURL(queryArtistInfo))
+            startActivity(intent)
+        }
+    }
 
     private fun getQueryBodyArtistInfoFromService(artistName: String?) =
         Gson().fromJson(getQueryResponseArtistInfoFromService(artistName).body(), JsonObject::class.java)
 
     private fun getQueryResponseArtistInfoFromService(artistName: String?) : Response<String> =
         createLastFMAPI().getArtistInfo(artistName).execute()
+
+    private fun createLastFMAPI() =
+        createRetrofit().create(LastFMAPI::class.java)
+
+    private fun createRetrofit() =
+        Retrofit.Builder()
+            .baseUrl("https://ws.audioscrobbler.com/2.0/")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
 
     private fun getArtistBiography(jobj: JsonObject): JsonElement {
 

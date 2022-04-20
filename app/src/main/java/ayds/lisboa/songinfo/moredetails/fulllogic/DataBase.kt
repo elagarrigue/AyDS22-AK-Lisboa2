@@ -24,7 +24,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
 
     companion object {
         fun testDB() {
-            var connection= createDBConnection()
+            var connection = createDBConnection()
             try {
                 val rs = createDBStatement(connection).executeQuery("select * from artists")
                 while (rs.next()) {
@@ -44,13 +44,13 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             }
         }
 
-        private fun createDBConnection():Connection{
+        private fun createDBConnection(): Connection {
             var connection: Connection? = null
             connection = DriverManager.getConnection("jdbc:sqlite:./dictionary.db")
             return connection
         }
 
-        private fun createDBStatement(connection: Connection):Statement{
+        private fun createDBStatement(connection: Connection): Statement {
             val statement = connection.createStatement()
             statement.queryTimeout = 30
             return statement
@@ -59,23 +59,17 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         @JvmStatic
         fun saveArtist(dbHelper: DataBase, artist: String?, info: String?) {
             val db = dbHelper.writableDatabase
-
-// Create a new map of values, where column names are the keys
             val values = ContentValues()
             values.put("artist", artist)
             values.put("info", info)
             values.put("source", 1)
-
-// Insert the new row, returning the primary key value of the new row
-            val newRowId = db.insert("artists", null, values)
+            db.insert("artists", null, values)
         }
 
         @JvmStatic
         fun getInfo(dbHelper: DataBase, artist: String): String? {
             val db = dbHelper.readableDatabase
-
-// Define a projection that specifies which columns from the database
-// you will actually use after this query.
+            //specifies which columns from the database you will actually use after this query.
             val projection = arrayOf(
                 "id",
                 "artist",

@@ -23,40 +23,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
     companion object {
-        fun testDB() {
-            var connection = createDBConnection()
-            try {
-                val rs = createDBStatement(connection).executeQuery("select * from artists")
-                while (rs.next()) {
-                    println("id = " + rs.getInt("id"))
-                    println("artist = " + rs.getString("artist"))
-                    println("info = " + rs.getString("info"))
-                    println("source = " + rs.getString("source"))
-                }
-            } catch (e: SQLException) {
-                System.err.println(e.message)
-            } finally {
-                try {
-                    connection?.close()
-                } catch (e: SQLException) {
-                    System.err.println(e)
-                }
-            }
-        }
-
-        private fun createDBConnection(): Connection {
-            var connection: Connection? = null
-            connection = DriverManager.getConnection("jdbc:sqlite:./dictionary.db")
-            return connection
-        }
-
-        private fun createDBStatement(connection: Connection): Statement {
-            val statement = connection.createStatement()
-            statement.queryTimeout = 30
-            return statement
-        }
-
-        @JvmStatic
+       @JvmStatic
         fun saveArtist(dbHelper: DataBase, artist: String?, info: String?) {
             val db = dbHelper.writableDatabase
             val values = ContentValues()

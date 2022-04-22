@@ -22,6 +22,7 @@ import java.lang.StringBuilder
 
 class OtherInfoWindow : AppCompatActivity() {
     private var textPane2: TextView? = null
+    private var artistName: String? = null
 
     //private JPanel imagePanel;
     // private JLabel posterImageLabel;
@@ -33,14 +34,13 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     fun getARtistInfo(artistName: String?) {
-
-        Log.e("TAG", "artistName $artistName")
+        this.artistName = artistName
         Thread {
-            var artistInfo = getArtistInfoFromDataBase(artistName)
+            var artistInfo = getArtistInfoFromDataBase()
             if (existInDataBase(artistInfo)) {
                 artistInfo = "[*]$artistInfo"
             } else { // get from service
-                artistInfo = getArtistInfoFromService(artistName)
+                artistInfo = getArtistInfoFromService()
             }
             val imageUrl =
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
@@ -53,23 +53,23 @@ class OtherInfoWindow : AppCompatActivity() {
         }.start()
     }
 
-    private fun getArtistInfoFromDataBase(artistName: String?) =
+    private fun getArtistInfoFromDataBase() =
         DataBase.getInfo(dataBase, artistName)
 
     private fun existInDataBase(artistInfo: String?) =
         artistInfo != null
 
-    private fun getArtistInfoFromService(artistName: String?): String? {
+    private fun getArtistInfoFromService(): String? {
 
         var artistInfo: String = ""
 
         try {
-            val queryArtistInfo = getQueryBodyArtistInfoFromService(artistName)
+            val queryArtistInfo = getQueryBodyArtistInfoFromService()
             val artistBiography = getArtistBiography(queryArtistInfo)
             if (existInService(artistBiography)) {
                 artistInfo = addLineBreaks(artistBiography)
-                artistInfo = textToHtml(artistInfo, artistName)
-                saveArtistInDataBase(artistName,artistInfo)
+                artistInfo = textToHtml(artistInfo)
+                saveArtistInDataBase(artistInfo)
             } else {
                 artistInfo = "No Results"
             }
@@ -90,10 +90,10 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    private fun getQueryBodyArtistInfoFromService(artistName: String?) =
-        Gson().fromJson(getQueryResponseArtistInfoFromService(artistName).body(), JsonObject::class.java)
+    private fun getQueryBodyArtistInfoFromService() =
+        Gson().fromJson(getQueryResponseArtistInfoFromService().body(), JsonObject::class.java)
 
-    private fun getQueryResponseArtistInfoFromService(artistName: String?) : Response<String> =
+    private fun getQueryResponseArtistInfoFromService() : Response<String> =
         createLastFMAPI().getArtistInfo(artistName).execute()
 
     private fun createLastFMAPI() =
@@ -123,7 +123,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun addLineBreaks(artistBiography: JsonElement) : String =
         artistBiography.asString.replace("\\n", "\n")
 
-    private fun saveArtistInDataBase(artistName: String?, artistInfo: String) {
+    private fun saveArtistInDataBase(artistInfo: String) {
         DataBase.saveArtist(dataBase, artistName, artistInfo)
     }
 
@@ -136,14 +136,14 @@ class OtherInfoWindow : AppCompatActivity() {
         getARtistInfo(artist)
     }
 
-    private fun textToHtml(text: String, term: String?): String {
+    private fun textToHtml(text: String): String {
         val builder = StringBuilder()
         builder.append("<html><div width=400>")
         builder.append("<font face=\"arial\">")
         val textWithBold = text
             .replace("'", " ")
             .replace("\n", "<br>")
-            .replace("(?i)" + term!!.toRegex(), "<b>" + term.toUpperCase() + "</b>")
+            .replace("(?i)" + artistName!!.toRegex(), "<b>" + artistName!!.toUpperCase() + "</b>")
         builder.append(textWithBold)
         builder.append("</font></div></html>")
         return builder.toString()

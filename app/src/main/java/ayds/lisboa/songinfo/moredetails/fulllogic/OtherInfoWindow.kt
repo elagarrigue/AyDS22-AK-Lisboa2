@@ -24,8 +24,6 @@ class OtherInfoWindow : AppCompatActivity() {
     private var textPane2: TextView? = null
     private var artistName: String? = null
 
-    //private JPanel imagePanel;
-    // private JLabel posterImageLabel;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
@@ -33,7 +31,7 @@ class OtherInfoWindow : AppCompatActivity() {
         open(intent.getStringExtra("artistName"))
     }
 
-    fun getARtistInfo(artistName: String?) {
+    fun getArtistInfo(artistName: String?) {
         this.artistName = artistName
         createThreadToGetArtistInfo()
     }
@@ -56,36 +54,41 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun createThreadToGetArtistInfo() {
         Thread {
-            var artistInfo = getArtistInfoFromDataBase()
-            artistInfo = if (existInDataBase(artistInfo)) {
-                "[*]$artistInfo"
-            } else {
-                getArtistInfoFromService()
-            }
-            setExternalServiceImg(artistInfo)
+            setExternalServiceImg(getAristInfoFromDataBaseOrService())
         }.start()
     }
 
+    private fun getAristInfoFromDataBaseOrService() : String {
+        var artistInfo = getArtistInfoFromDataBase()
+        artistInfo = if (existInDataBase(artistInfo)) {
+            "[*]$artistInfo"
+        } else {
+            getArtistInfoFromService()
+        }
+        return artistInfo
+    }
     private fun getArtistInfoFromService(): String? {
-
-        var artistInfo: String = ""
-
+        var queryArtistInfo: JsonObject?
+        var artistBiography: JsonElement? = null
         try {
-            val queryArtistInfo = getQueryBodyArtistInfoFromService()
-            val artistBiography = getArtistBiography(queryArtistInfo)
-            if (existInService(artistBiography)) {
-                artistInfo = addLineBreaks(artistBiography)
-                artistInfo = textToHtml(artistInfo)
-                saveArtistInDataBase(artistInfo)
-            } else {
-                artistInfo = "No Results"
-            }
+            queryArtistInfo = getQueryBodyArtistInfoFromService()
+            artistBiography = getArtistBiography(queryArtistInfo)
             setOnClickerListenerToOpenURLButton(queryArtistInfo)
         } catch (e1: IOException) {
-            Log.e("TAG", "Error $e1")
             e1.printStackTrace()
         }
+        return getStringArtistInfoFromService(artistBiography)
+    }
 
+    private fun getStringArtistInfoFromService(artistBiography: JsonElement?) : String {
+        var artistInfo = ""
+        if (existInService(artistBiography)) {
+            artistInfo = addLineBreaks(artistBiography)
+            artistInfo = textToHtml(artistInfo)
+            saveArtistInDataBase(artistInfo)
+        } else {
+            artistInfo = "No Results"
+        }
         return artistInfo
     }
 
@@ -113,7 +116,6 @@ class OtherInfoWindow : AppCompatActivity() {
             .build()
 
     private fun getArtistBiography(jobj: JsonObject): JsonElement {
-
         val artistBiography = getArtist(jobj)["bio"].asJsonObject
         return artistBiography["content"]
     }
@@ -127,8 +129,8 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun existInService(artistBiography: JsonElement?) =
         artistBiography != null
 
-    private fun addLineBreaks(artistBiography: JsonElement) : String =
-        artistBiography.asString.replace("\\n", "\n")
+    private fun addLineBreaks(artistBiography: JsonElement?) : String =
+        artistBiography!!.asString.replace("\\n", "\n")
 
     private fun saveArtistInDataBase(artistInfo: String) {
         DataBase.saveArtist(dataBase, artistName, artistInfo)
@@ -138,9 +140,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun open(artist: String?) {
         dataBase = DataBase(this)
         DataBase.saveArtist(dataBase, "test", "sarasa")
-        Log.e("TAG", "" + DataBase.getInfo(dataBase, "test"))
-        Log.e("TAG", "" + DataBase.getInfo(dataBase, "nada"))
-        getARtistInfo(artist)
+        getArtistInfo(artist)
     }
 
     private fun textToHtml(text: String): String {

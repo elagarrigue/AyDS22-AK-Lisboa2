@@ -35,22 +35,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     fun getARtistInfo(artistName: String?) {
         this.artistName = artistName
-        Thread {
-            var artistInfo = getArtistInfoFromDataBase()
-            if (existInDataBase(artistInfo)) {
-                artistInfo = "[*]$artistInfo"
-            } else { // get from service
-                artistInfo = getArtistInfoFromService()
-            }
-            val imageUrl =
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
-            Log.e("TAG", "Get Image from $imageUrl")
-            val finalText = artistInfo
-            runOnUiThread {
-                Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
-                textPane2!!.text = Html.fromHtml(finalText)
-            }
-        }.start()
+        createThreadToGetArtistInfo()
     }
 
     private fun getArtistInfoFromDataBase() =
@@ -58,6 +43,28 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun existInDataBase(artistInfo: String?) =
         artistInfo != null
+
+    private fun getImgURL() =
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
+
+    private fun setExternalServiceImg(artistInfo: String) {
+        runOnUiThread {
+            Picasso.get().load(getImgURL()).into(findViewById<View>(R.id.imageView) as ImageView)
+            textPane2!!.text = Html.fromHtml(artistInfo)
+        }
+    }
+
+    private fun createThreadToGetArtistInfo() {
+        Thread {
+            var artistInfo = getArtistInfoFromDataBase()
+            artistInfo = if (existInDataBase(artistInfo)) {
+                "[*]$artistInfo"
+            } else {
+                getArtistInfoFromService()
+            }
+            setExternalServiceImg(artistInfo)
+        }.start()
+    }
 
     private fun getArtistInfoFromService(): String? {
 

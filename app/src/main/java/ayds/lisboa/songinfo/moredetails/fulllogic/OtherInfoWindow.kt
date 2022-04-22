@@ -13,7 +13,6 @@ import android.content.Intent
 import android.net.Uri
 import com.squareup.picasso.Picasso
 import android.text.Html
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import retrofit2.Response
@@ -31,7 +30,7 @@ class OtherInfoWindow : AppCompatActivity() {
         open(intent.getStringExtra("artistName"))
     }
 
-    fun getArtistInfo(artistName: String?) {
+    private fun getArtistInfo(artistName: String?) {
         this.artistName = artistName
         createThreadToGetArtistInfo()
     }
@@ -68,8 +67,8 @@ class OtherInfoWindow : AppCompatActivity() {
         return artistInfo
     }
 
-    private fun getArtistInfoFromService(): String? {
-        var queryArtistInfo: JsonObject?
+    private fun getArtistInfoFromService(): String {
+        val queryArtistInfo: JsonObject?
         var artistBiography: JsonElement? = null
         try {
             queryArtistInfo = getQueryBodyOfArtistInfoFromService()
@@ -82,7 +81,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun getStringArtistInfoFromService(artistBiography: JsonElement?) : String {
-        var artistInfo = ""
+        var artistInfo: String
         if (existInService(artistBiography)) {
             artistInfo = addLineBreaks(artistBiography)
             artistInfo = textToHtml(artistInfo)

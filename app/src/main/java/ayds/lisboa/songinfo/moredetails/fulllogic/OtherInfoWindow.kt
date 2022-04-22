@@ -67,11 +67,12 @@ class OtherInfoWindow : AppCompatActivity() {
         }
         return artistInfo
     }
+
     private fun getArtistInfoFromService(): String? {
         var queryArtistInfo: JsonObject?
         var artistBiography: JsonElement? = null
         try {
-            queryArtistInfo = getQueryBodyArtistInfoFromService()
+            queryArtistInfo = getQueryBodyOfArtistInfoFromService()
             artistBiography = getArtistBiography(queryArtistInfo)
             setOnClickerListenerToOpenURLButton(queryArtistInfo)
         } catch (e1: IOException) {
@@ -100,10 +101,10 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    private fun getQueryBodyArtistInfoFromService() =
-        Gson().fromJson(getQueryResponseArtistInfoFromService().body(), JsonObject::class.java)
+    private fun getQueryBodyOfArtistInfoFromService() =
+        Gson().fromJson(getQueryResponseOfArtistInfoFromService().body(), JsonObject::class.java)
 
-    private fun getQueryResponseArtistInfoFromService() : Response<String> =
+    private fun getQueryResponseOfArtistInfoFromService() : Response<String> =
         createLastFMAPI().getArtistInfo(artistName).execute()
 
     private fun createLastFMAPI() =

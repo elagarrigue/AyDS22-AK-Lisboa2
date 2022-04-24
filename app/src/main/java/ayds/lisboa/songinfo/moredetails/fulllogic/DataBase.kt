@@ -28,26 +28,24 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
     }
 
     fun getInfo(artist: String): String? {
-        var cursor = makeQuery(artist)
+        val cursor = makeQuery(artist)
         return getArtistInfoFromQuery(cursor)
     }
 
-    private fun makeQuery(artist:String) : Cursor{
+    private fun makeQuery(artist: String): Cursor {
         val db = this.readableDatabase
-        var cursor =  db.query(
-           "artists",  // The table to query
-            arrayOf("id", "artist", "info"),  // The array of columns to return (pass null to get all)
+        return db.query(
+            "artists",  // The table to query
+            arrayOf("id", "artist", "info"),  // The array of columns to return
             "artist  = ?",  // The columns for the WHERE clause
             arrayOf(artist),  // The values for the WHERE clause
             null,  // don't group the rows
             null,  // don't filter by row groups
             "artist DESC" // The sort order
         )
-        return cursor
     }
 
     private fun getArtistInfoFromQuery(cursor: Cursor) : String?{
-
         var artistInfo: String? = null
         if (cursor.moveToNext()) {
             artistInfo = cursor.getString(

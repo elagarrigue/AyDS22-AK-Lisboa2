@@ -31,19 +31,22 @@ class OtherInfoWindow : AppCompatActivity() {
         open(intent.getStringExtra("artistName"))
     }
 
+    private fun open(artist: String?) {
+        dataBase = DataBase(this)
+        dataBase!!.saveArtist("test", "sarasa")
+        getArtistInfo(artist)
+    }
+
     private fun getArtistInfo(artistName: String?) {
         this.artistName = artistName
         createThreadToGetArtistInfo()
     }
 
-    private fun getArtistInfoFromDataBase() =
-        dataBase!!.getInfo(artistName!!)
-
-    private fun existInDataBase(artistInfo: String?) =
-        artistInfo != null
-
-    private fun getImgURL() =
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
+    private fun createThreadToGetArtistInfo() {
+        Thread {
+            setExternalServiceImg(getArtistInfoFromDataBaseOrService())
+        }.start()
+    }
 
     private fun setExternalServiceImg(artistInfo: String) {
         runOnUiThread {
@@ -52,13 +55,10 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    private fun createThreadToGetArtistInfo() {
-        Thread {
-            setExternalServiceImg(getAristInfoFromDataBaseOrService())
-        }.start()
-    }
+    private fun getImgURL() =
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
 
-    private fun getAristInfoFromDataBaseOrService() : String {
+    private fun getArtistInfoFromDataBaseOrService() : String {
         var artistInfo = getArtistInfoFromDataBase()
         artistInfo = if (existInDataBase(artistInfo)) {
             "[*]$artistInfo"
@@ -67,6 +67,12 @@ class OtherInfoWindow : AppCompatActivity() {
         }
         return artistInfo
     }
+
+    private fun getArtistInfoFromDataBase() =
+        dataBase!!.getInfo(artistName!!)
+
+    private fun existInDataBase(artistInfo: String?) =
+        artistInfo != null
 
     private fun getArtistInfoFromService(): String {
         val queryArtistInfo: JsonObject?
@@ -79,26 +85,6 @@ class OtherInfoWindow : AppCompatActivity() {
             e1.printStackTrace()
         }
         return getStringArtistInfoFromService(artistBiography)
-    }
-
-    private fun getStringArtistInfoFromService(artistBiography: JsonElement?) : String {
-        var artistInfo: String
-        if (existInService(artistBiography)) {
-            artistInfo = addLineBreaks(artistBiography)
-            artistInfo = textToHtml(artistInfo)
-            saveArtistInDataBase(artistInfo)
-        } else {
-            artistInfo = "No Results"
-        }
-        return artistInfo
-    }
-
-    private fun setOnClickerListenerToOpenURLButton(queryArtistInfo: JsonObject) {
-        findViewById<View>(R.id.openUrlButton).setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(getArtistBiographyURL(queryArtistInfo))
-            startActivity(intent)
-        }
     }
 
     private fun getQueryBodyOfArtistInfoFromService() =
@@ -121,11 +107,31 @@ class OtherInfoWindow : AppCompatActivity() {
         return artistBiography["content"]
     }
 
+    private fun setOnClickerListenerToOpenURLButton(queryArtistInfo: JsonObject) {
+        findViewById<View>(R.id.openUrlButton).setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(getArtistBiographyURL(queryArtistInfo))
+            startActivity(intent)
+        }
+    }
+
     private fun getArtistBiographyURL(jobj: JsonObject): String =
         getArtist(jobj)["url"].asString
 
     private fun getArtist(jobj: JsonObject): JsonObject =
         jobj["artist"].asJsonObject
+
+    private fun getStringArtistInfoFromService(artistBiography: JsonElement?) : String {
+        var artistInfo: String
+        if (existInService(artistBiography)) {
+            artistInfo = addLineBreaks(artistBiography)
+            artistInfo = textToHtml(artistInfo)
+            saveArtistInDataBase(artistInfo)
+        } else {
+            artistInfo = "No Results"
+        }
+        return artistInfo
+    }
 
     private fun existInService(artistBiography: JsonElement?) =
         artistBiography != null
@@ -135,12 +141,6 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun saveArtistInDataBase(artistInfo: String) {
         dataBase!!.saveArtist(artistName, artistInfo)
-    }
-
-    private fun open(artist: String?) {
-        dataBase = DataBase(this)
-        dataBase!!.saveArtist("test", "sarasa")
-        getArtistInfo(artist)
     }
 
     private fun textToHtml(text: String): String {

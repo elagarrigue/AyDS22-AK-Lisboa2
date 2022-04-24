@@ -28,13 +28,11 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
     }
 
     fun getInfo(artist: String): String? {
-
         var cursor = makeQuery(artist)
         return getArtistInfoFromQuery(cursor)
     }
 
     private fun makeQuery(artist:String) : Cursor{
-
         val db = this.readableDatabase
         var cursor =  db.query(
            "artists",  // The table to query

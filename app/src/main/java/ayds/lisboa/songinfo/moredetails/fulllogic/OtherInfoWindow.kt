@@ -22,6 +22,7 @@ import java.lang.StringBuilder
 class OtherInfoWindow : AppCompatActivity() {
     private var textPane2: TextView? = null
     private var artistName: String? = null
+    private var dataBase: DataBase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +37,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun getArtistInfoFromDataBase() =
-        DataBase.getInfo(dataBase, artistName)
+        dataBase!!.getInfo(artistName!!)
 
     private fun existInDataBase(artistInfo: String?) =
         artistInfo != null
@@ -133,13 +134,12 @@ class OtherInfoWindow : AppCompatActivity() {
         artistBiography!!.asString.replace("\\n", "\n")
 
     private fun saveArtistInDataBase(artistInfo: String) {
-        DataBase.saveArtist(dataBase, artistName, artistInfo)
+        dataBase!!.saveArtist(artistName, artistInfo)
     }
 
-    private var dataBase: DataBase? = null
     private fun open(artist: String?) {
         dataBase = DataBase(this)
-        DataBase.saveArtist(dataBase, "test", "sarasa")
+        dataBase!!.saveArtist("test", "sarasa")
         getArtistInfo(artist)
     }
 

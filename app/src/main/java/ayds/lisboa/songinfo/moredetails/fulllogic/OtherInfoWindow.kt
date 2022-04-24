@@ -13,7 +13,6 @@ import android.content.Intent
 import android.net.Uri
 import com.squareup.picasso.Picasso
 import android.text.Html
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import retrofit2.Response
@@ -22,9 +21,8 @@ import java.lang.StringBuilder
 
 class OtherInfoWindow : AppCompatActivity() {
     private var textPane2: TextView? = null
+    private var artistName: String? = null
 
-    //private JPanel imagePanel;
-    // private JLabel posterImageLabel;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
@@ -32,53 +30,65 @@ class OtherInfoWindow : AppCompatActivity() {
         open(intent.getStringExtra("artistName"))
     }
 
-    fun getARtistInfo(artistName: String?) {
-
-        Log.e("TAG", "artistName $artistName")
-        Thread {
-            var artistInfo = getArtistInfoFromDataBase(artistName)
-            if (existInDataBase(artistInfo)) {
-                artistInfo = "[*]$artistInfo"
-            } else { // get from service
-                artistInfo = getArtistInfoFromService(artistName)
-            }
-            val imageUrl =
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
-            Log.e("TAG", "Get Image from $imageUrl")
-            val finalText = artistInfo
-            runOnUiThread {
-                Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
-                textPane2!!.text = Html.fromHtml(finalText)
-            }
-        }.start()
+    private fun getArtistInfo(artistName: String?) {
+        this.artistName = artistName
+        createThreadToGetArtistInfo()
     }
 
-    private fun getArtistInfoFromDataBase(artistName: String?) =
+    private fun getArtistInfoFromDataBase() =
         DataBase.getInfo(dataBase, artistName)
 
     private fun existInDataBase(artistInfo: String?) =
         artistInfo != null
 
-    private fun getArtistInfoFromService(artistName: String?): String? {
+    private fun getImgURL() =
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
 
-        var artistInfo: String = ""
+    private fun setExternalServiceImg(artistInfo: String) {
+        runOnUiThread {
+            Picasso.get().load(getImgURL()).into(findViewById<View>(R.id.imageView) as ImageView)
+            textPane2!!.text = Html.fromHtml(artistInfo)
+        }
+    }
 
+    private fun createThreadToGetArtistInfo() {
+        Thread {
+            setExternalServiceImg(getAristInfoFromDataBaseOrService())
+        }.start()
+    }
+
+    private fun getAristInfoFromDataBaseOrService() : String {
+        var artistInfo = getArtistInfoFromDataBase()
+        artistInfo = if (existInDataBase(artistInfo)) {
+            "[*]$artistInfo"
+        } else {
+            getArtistInfoFromService()
+        }
+        return artistInfo
+    }
+
+    private fun getArtistInfoFromService(): String {
+        val queryArtistInfo: JsonObject?
+        var artistBiography: JsonElement? = null
         try {
-            val queryArtistInfo = getQueryBodyArtistInfoFromService(artistName)
-            val artistBiography = getArtistBiography(queryArtistInfo)
-            if (existInService(artistBiography)) {
-                artistInfo = addLineBreaks(artistBiography)
-                artistInfo = textToHtml(artistInfo, artistName)
-                saveArtistInDataBase(artistName,artistInfo)
-            } else {
-                artistInfo = "No Results"
-            }
+            queryArtistInfo = getQueryBodyOfArtistInfoFromService()
+            artistBiography = getArtistBiography(queryArtistInfo)
             setOnClickerListenerToOpenURLButton(queryArtistInfo)
         } catch (e1: IOException) {
-            Log.e("TAG", "Error $e1")
             e1.printStackTrace()
         }
+        return getStringArtistInfoFromService(artistBiography)
+    }
 
+    private fun getStringArtistInfoFromService(artistBiography: JsonElement?) : String {
+        var artistInfo: String
+        if (existInService(artistBiography)) {
+            artistInfo = addLineBreaks(artistBiography)
+            artistInfo = textToHtml(artistInfo)
+            saveArtistInDataBase(artistInfo)
+        } else {
+            artistInfo = "No Results"
+        }
         return artistInfo
     }
 
@@ -90,10 +100,10 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    private fun getQueryBodyArtistInfoFromService(artistName: String?) =
-        Gson().fromJson(getQueryResponseArtistInfoFromService(artistName).body(), JsonObject::class.java)
+    private fun getQueryBodyOfArtistInfoFromService() =
+        Gson().fromJson(getQueryResponseOfArtistInfoFromService().body(), JsonObject::class.java)
 
-    private fun getQueryResponseArtistInfoFromService(artistName: String?) : Response<String> =
+    private fun getQueryResponseOfArtistInfoFromService() : Response<String> =
         createLastFMAPI().getArtistInfo(artistName).execute()
 
     private fun createLastFMAPI() =
@@ -106,7 +116,6 @@ class OtherInfoWindow : AppCompatActivity() {
             .build()
 
     private fun getArtistBiography(jobj: JsonObject): JsonElement {
-
         val artistBiography = getArtist(jobj)["bio"].asJsonObject
         return artistBiography["content"]
     }
@@ -120,10 +129,10 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun existInService(artistBiography: JsonElement?) =
         artistBiography != null
 
-    private fun addLineBreaks(artistBiography: JsonElement) : String =
-        artistBiography.asString.replace("\\n", "\n")
+    private fun addLineBreaks(artistBiography: JsonElement?) : String =
+        artistBiography!!.asString.replace("\\n", "\n")
 
-    private fun saveArtistInDataBase(artistName: String?, artistInfo: String) {
+    private fun saveArtistInDataBase(artistInfo: String) {
         DataBase.saveArtist(dataBase, artistName, artistInfo)
     }
 
@@ -131,19 +140,17 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun open(artist: String?) {
         dataBase = DataBase(this)
         DataBase.saveArtist(dataBase, "test", "sarasa")
-        Log.e("TAG", "" + DataBase.getInfo(dataBase, "test"))
-        Log.e("TAG", "" + DataBase.getInfo(dataBase, "nada"))
-        getARtistInfo(artist)
+        getArtistInfo(artist)
     }
 
-    private fun textToHtml(text: String, term: String?): String {
+    private fun textToHtml(text: String): String {
         val builder = StringBuilder()
         builder.append("<html><div width=400>")
         builder.append("<font face=\"arial\">")
         val textWithBold = text
             .replace("'", " ")
             .replace("\n", "<br>")
-            .replace("(?i)" + term!!.toRegex(), "<b>" + term.toUpperCase() + "</b>")
+            .replace("(?i)" + artistName!!.toRegex(), "<b>" + artistName!!.toUpperCase() + "</b>")
         builder.append(textWithBold)
         builder.append("</font></div></html>")
         return builder.toString()

@@ -13,37 +13,35 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         db.execSQL(
             "create table artists (id INTEGER PRIMARY KEY AUTOINCREMENT, artist string, info string, source integer)"
         )
-        Log.i("DB", "DB created")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
     fun saveArtist(artist: String?, info: String?) {
-        val db = this.writableDatabase
+        this.writableDatabase.insert("artists", null, getContentValues(artist,info))
+    }
+
+    private fun getContentValues(artist: String?,info: String?): ContentValues {
         val values = ContentValues()
         values.put("artist", artist)
         values.put("info", info)
         values.put("source", 1)
-        db.insert("artists", null, values)
+        return values
     }
 
-    fun getInfo(artist: String): String? {
-        val cursor = makeQuery(artist)
-        return getArtistInfoFromQuery(cursor)
-    }
+    fun getInfo(artist: String): String? = getArtistInfoFromQuery(makeQuery(artist))
 
-    private fun makeQuery(artist: String): Cursor {
-        val db = this.readableDatabase
-        return db.query(
-            "artists",  // The table to query
-            arrayOf("id", "artist", "info"),  // The array of columns to return
-            "artist  = ?",  // The columns for the WHERE clause
-            arrayOf(artist),  // The values for the WHERE clause
-            null,  // don't group the rows
-            null,  // don't filter by row groups
-            "artist DESC" // The sort order
+    private fun makeQuery(artist: String): Cursor =
+        this.readableDatabase.query(
+            "artists",
+            arrayOf("id", "artist", "info"),
+            "artist  = ?",
+            arrayOf(artist),  
+            null,
+            null,
+            "artist DESC"
         )
-    }
+
 
     private fun getArtistInfoFromQuery(cursor: Cursor) : String?{
         var artistInfo: String? = null

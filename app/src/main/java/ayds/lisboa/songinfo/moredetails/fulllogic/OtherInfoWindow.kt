@@ -102,10 +102,8 @@ class OtherInfoWindow : AppCompatActivity() {
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
 
-    private fun getArtistBiography(jobj: JsonObject): JsonElement {
-        val artistBiography = getArtist(jobj)["bio"].asJsonObject
-        return artistBiography["content"]
-    }
+    private fun getArtistBiography(jobj: JsonObject): JsonElement =
+        getArtist(jobj)["bio"].asJsonObject["content"]
 
     private fun setOnClickerListenerToOpenURLButton(queryArtistInfo: JsonObject) {
         findViewById<View>(R.id.openUrlButton).setOnClickListener {

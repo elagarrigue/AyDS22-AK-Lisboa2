@@ -33,7 +33,6 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun open(artist: String?) {
         dataBase = DataBase(this)
-        dataBase!!.saveArtist("test", "sarasa")
         getArtistInfo(artist)
     }
 

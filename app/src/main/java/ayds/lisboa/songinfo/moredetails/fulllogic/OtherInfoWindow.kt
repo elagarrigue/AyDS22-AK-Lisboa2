@@ -19,6 +19,16 @@ import retrofit2.Response
 import java.io.IOException
 import java.lang.StringBuilder
 
+private const val ARTIST_NAME = "artistName"
+private const val URL_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
+private const val LOCAL_DATABASE_PREFIX = "[*]"
+private const val ARTIST = "artist"
+private const val RETROFIT_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
+private const val BIOGRAPHY = "bio"
+private const val CONTENT = "content"
+private const val URL = "url"
+private const val NO_RESULT_MESSAGE = "No Results"
+
 class OtherInfoWindow : AppCompatActivity() {
     private var textPane2: TextView? = null
     private var artistName: String? = null
@@ -28,7 +38,7 @@ class OtherInfoWindow : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
         textPane2 = findViewById(R.id.textPane2)
-        open(intent.getStringExtra("artistName"))
+        open(intent.getStringExtra(ARTIST_NAME))
     }
 
     private fun open(artist: String?) {
@@ -49,18 +59,15 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun setExternalServiceImg(artistInfo: String) {
         runOnUiThread {
-            Picasso.get().load(getImgURL()).into(findViewById<View>(R.id.imageView) as ImageView)
+            Picasso.get().load(URL_IMAGE).into(findViewById<View>(R.id.imageView) as ImageView)
             textPane2!!.text = Html.fromHtml(artistInfo)
         }
     }
 
-    private fun getImgURL() =
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
-
     private fun getArtistInfoFromDataBaseOrService() : String {
         var artistInfo = getArtistInfoFromDataBase()
         artistInfo = if (existInDataBase(artistInfo)) {
-            "[*]$artistInfo"
+            "$LOCAL_DATABASE_PREFIX$artistInfo"
         } else {
             getArtistInfoFromService()
         }
@@ -97,12 +104,12 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun createRetrofit() =
         Retrofit.Builder()
-            .baseUrl("https://ws.audioscrobbler.com/2.0/")
+            .baseUrl(RETROFIT_BASE_URL)
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
 
     private fun getArtistBiography(jobj: JsonObject): JsonElement =
-        getArtist(jobj)["bio"].asJsonObject["content"]
+        getArtist(jobj)[BIOGRAPHY].asJsonObject[CONTENT]
 
     private fun setOnClickerListenerToOpenURLButton(queryArtistInfo: JsonObject) {
         findViewById<View>(R.id.openUrlButton).setOnClickListener {
@@ -113,10 +120,10 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun getArtistBiographyURL(jobj: JsonObject): String =
-        getArtist(jobj)["url"].asString
+        getArtist(jobj)[URL].asString
 
     private fun getArtist(jobj: JsonObject): JsonObject =
-        jobj["artist"].asJsonObject
+        jobj[ARTIST].asJsonObject
 
     private fun getStringArtistInfoFromService(artistBiography: JsonElement?) : String {
         var artistInfo: String
@@ -125,7 +132,7 @@ class OtherInfoWindow : AppCompatActivity() {
             artistInfo = textToHtml(artistInfo)
             saveArtistInDataBase(artistInfo)
         } else {
-            artistInfo = "No Results"
+            artistInfo = NO_RESULT_MESSAGE
         }
         return artistInfo
     }

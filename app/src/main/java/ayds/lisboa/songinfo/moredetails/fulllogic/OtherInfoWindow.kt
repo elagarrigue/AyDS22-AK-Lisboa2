@@ -33,7 +33,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private lateinit var textPaneArtistBio: TextView
     private lateinit var artistName: String
     private lateinit var dataBase: DataBase
-    private lateinit var view: ImageView
+    private lateinit var imageView: ImageView
     private lateinit var lastFMAPI: LastFMAPI
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +42,7 @@ class OtherInfoWindow : AppCompatActivity() {
         initTextPaneArtistInfo()
         initDataBase()
         initLastFMAPI()
+        initImageView()
         getArtistInfo(intent.getStringExtra(ARTIST_NAME)?:"")
     }
 
@@ -63,6 +64,10 @@ class OtherInfoWindow : AppCompatActivity() {
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
 
+    private fun initImageView() {
+        imageView = findViewById<View>(R.id.imageView) as ImageView
+    }
+
     private fun getArtistInfo(artistName: String) {
         initArtistName(artistName)
         createThreadToGetArtistInfo()
@@ -74,24 +79,25 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun createThreadToGetArtistInfo() {
         Thread {
-            setExternalServiceImg(getArtistInfoFromDataBaseOrService())
+            setArtistInfoInView(getArtistInfoFromDataBaseOrService())
         }.start()
     }
 
-    private fun setExternalServiceImg(artistInfo: String) {
-        runOnUiThread {//FALTA VER LO DE VIEW
-            initView()
-            Picasso.get().load(URL_IMAGE).into(view)
-            setTextInTextPaneArtistBio(artistInfo)
+    private fun setArtistInfoInView(artistInfo: String) {
+        setExternalServiceImg()
+        setArtistBioInTextPane(artistInfo)
+    }
+
+    private fun setExternalServiceImg() {
+        runOnUiThread {
+            Picasso.get().load(URL_IMAGE).into(imageView)
         }
     }
 
-    private fun initView() {
-        view = findViewById<View>(R.id.imageView) as ImageView
-    }
-
-    private fun setTextInTextPaneArtistBio(artistInfo: String){
-        textPaneArtistBio.text = Html.fromHtml(artistInfo)
+    private fun setArtistBioInTextPane(artistInfo: String){
+        runOnUiThread {
+            textPaneArtistBio.text = Html.fromHtml(artistInfo)
+        }
     }
 
     private fun getArtistInfoFromDataBaseOrService() : String {

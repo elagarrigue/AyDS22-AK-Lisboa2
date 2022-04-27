@@ -42,7 +42,7 @@ class OtherInfoWindow : AppCompatActivity() {
         initTextPaneArtistInfo()
         initDataBase()
         initLastFMAPI()
-        getArtistInfo(intent.getStringExtra(ARTIST_NAME)!!)
+        getArtistInfo(intent.getStringExtra(ARTIST_NAME)?:"")
     }
 
     private fun initTextPaneArtistInfo(){

@@ -34,13 +34,14 @@ class OtherInfoWindow : AppCompatActivity() {
     private lateinit var artistName: String
     private lateinit var dataBase: DataBase
     private lateinit var view: ImageView
+    private lateinit var lastFMAPI: LastFMAPI
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
         initTextPaneArtistInfo()
         initDataBase()
-
+        initLastFMAPI()
         getArtistInfo(intent.getStringExtra(ARTIST_NAME)!!)
     }
 
@@ -51,6 +52,16 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun initDataBase(){
         dataBase = DataBase(this)
     }
+
+    private fun initLastFMAPI(){
+        lastFMAPI = createRetrofit().create(LastFMAPI::class.java)
+    }
+
+    private fun createRetrofit() =
+        Retrofit.Builder()
+            .baseUrl(RETROFIT_BASE_URL)
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
 
     private fun getArtistInfo(artistName: String) {
         initArtistName(artistName)
@@ -117,16 +128,7 @@ class OtherInfoWindow : AppCompatActivity() {
         Gson().fromJson(getQueryResponseOfArtistInfoFromService().body(), JsonObject::class.java)
 
     private fun getQueryResponseOfArtistInfoFromService() : Response<String> =
-        createLastFMAPI().getArtistInfo(artistName).execute()
-
-    private fun createLastFMAPI() =
-        createRetrofit().create(LastFMAPI::class.java)
-
-    private fun createRetrofit() =
-        Retrofit.Builder()
-            .baseUrl(RETROFIT_BASE_URL)
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
+        lastFMAPI.getArtistInfo(artistName).execute()
 
     private fun getArtistBiography(jobj: JsonObject): JsonElement =
         getArtist(jobj)[BIOGRAPHY].asJsonObject[CONTENT]

@@ -44,8 +44,7 @@ class OtherInfoWindow : AppCompatActivity() {
         initTextPaneArtistInfo()
         initDataBase()
         initLastFMAPI()
-        initImageView()
-        initOpenURLButton()
+        initViews()
         getArtistInfo(intent.getStringExtra(ARTIST_NAME)?:"")
     }
 
@@ -67,11 +66,8 @@ class OtherInfoWindow : AppCompatActivity() {
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
 
-    private fun initImageView() {
+    private fun initViews() {
         imageView = findViewById<View>(R.id.imageView) as ImageView
-    }
-
-    private fun initOpenURLButton() {
         openUrlButton = findViewById<View>(R.id.openUrlButton) as Button
     }
 

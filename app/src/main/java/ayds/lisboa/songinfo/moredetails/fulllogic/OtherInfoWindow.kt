@@ -45,7 +45,8 @@ class OtherInfoWindow : AppCompatActivity() {
         initDataBase()
         initLastFMAPI()
         initViews()
-        getArtistInfo(intent.getStringExtra(ARTIST_NAME)?:"")
+        initArtistName()
+        getArtistInfo()
     }
 
     private fun initTextPaneArtistInfo(){
@@ -71,16 +72,11 @@ class OtherInfoWindow : AppCompatActivity() {
         openUrlButton = findViewById<View>(R.id.openUrlButton) as Button
     }
 
-    private fun getArtistInfo(artistName: String) {
-        initArtistName(artistName)
-        createThreadToGetArtistInfo()
+    private fun initArtistName(){
+        this.artistName = intent.getStringExtra(ARTIST_NAME)?:""
     }
 
-    private fun initArtistName(artistName: String){
-        this.artistName = artistName
-    }
-
-    private fun createThreadToGetArtistInfo() {
+    private fun getArtistInfo() {
         Thread {
             setArtistInfoInView(getArtistInfoFromDataBaseOrService())
         }.start()
@@ -124,8 +120,8 @@ class OtherInfoWindow : AppCompatActivity() {
         lateinit var queryArtistInfo: JsonObject
         lateinit var artistBiography: JsonElement
         return try {
-            val queryArtistInfo = getQueryBodyOfArtistInfoFromService()
-            val artistBiography = getArtistBiography(queryArtistInfo)
+            queryArtistInfo = getQueryBodyOfArtistInfoFromService()
+            artistBiography = getArtistBiography(queryArtistInfo)
             setOnClickerListenerToOpenURLButton(queryArtistInfo)
             getStringArtistInfoFromService(artistBiography)
         } catch (e1: IOException) {

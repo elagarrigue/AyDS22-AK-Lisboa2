@@ -123,14 +123,15 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun getArtistInfoFromService(): String {
         lateinit var queryArtistInfo: JsonObject
         lateinit var artistBiography: JsonElement
-        try {
-            queryArtistInfo = getQueryBodyOfArtistInfoFromService()
-            artistBiography = getArtistBiography(queryArtistInfo)
+        return try {
+            val queryArtistInfo = getQueryBodyOfArtistInfoFromService()
+            val artistBiography = getArtistBiography(queryArtistInfo)
             setOnClickerListenerToOpenURLButton(queryArtistInfo)
+            getStringArtistInfoFromService(artistBiography)
         } catch (e1: IOException) {
             e1.printStackTrace()
+            ""
         }
-        return getStringArtistInfoFromService(artistBiography)
     }
 
     private fun getQueryBodyOfArtistInfoFromService() =

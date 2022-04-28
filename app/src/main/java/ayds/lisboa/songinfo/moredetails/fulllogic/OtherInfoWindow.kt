@@ -14,6 +14,7 @@ import android.net.Uri
 import com.squareup.picasso.Picasso
 import android.text.Html
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import retrofit2.Response
 import java.io.IOException
@@ -35,6 +36,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private lateinit var dataBase: DataBase
     private lateinit var imageView: ImageView
     private lateinit var lastFMAPI: LastFMAPI
+    private lateinit var openUrlButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +45,7 @@ class OtherInfoWindow : AppCompatActivity() {
         initDataBase()
         initLastFMAPI()
         initImageView()
+        initOpenURLButton()
         getArtistInfo(intent.getStringExtra(ARTIST_NAME)?:"")
     }
 
@@ -66,6 +69,10 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun initImageView() {
         imageView = findViewById<View>(R.id.imageView) as ImageView
+    }
+
+    private fun initOpenURLButton() {
+        openUrlButton = findViewById<View>(R.id.openUrlButton) as Button
     }
 
     private fun getArtistInfo(artistName: String) {
@@ -140,7 +147,7 @@ class OtherInfoWindow : AppCompatActivity() {
         getArtist(jobj)[BIOGRAPHY].asJsonObject[CONTENT]
 
     private fun setOnClickerListenerToOpenURLButton(queryArtistInfo: JsonObject) {
-        findViewById<View>(R.id.openUrlButton).setOnClickListener {
+        openUrlButton.setOnClickListener {
             onClickActionOpenURLButton(queryArtistInfo)
         }
     }

@@ -41,16 +41,11 @@ class OtherInfoWindow : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
-        initTextPaneArtistInfo()
         initDataBase()
         initLastFMAPI()
         initViews()
         initArtistName()
         getArtistInfo()
-    }
-
-    private fun initTextPaneArtistInfo(){
-        textPaneArtistBio = findViewById(R.id.textPane2)
     }
 
     private fun initDataBase(){
@@ -68,8 +63,13 @@ class OtherInfoWindow : AppCompatActivity() {
             .build()
 
     private fun initViews() {
+        initTextPaneArtistInfo()
         imageView = findViewById<View>(R.id.imageView) as ImageView
         openUrlButton = findViewById<View>(R.id.openUrlButton) as Button
+    }
+
+    private fun initTextPaneArtistInfo(){
+        textPaneArtistBio = findViewById(R.id.textPane2)
     }
 
     private fun initArtistName(){

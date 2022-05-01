@@ -1,4 +1,4 @@
-package ayds.lisboa.songinfo.moredetails
+package ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM
 
 import android.database.sqlite.SQLiteOpenHelper
 import android.database.sqlite.SQLiteDatabase

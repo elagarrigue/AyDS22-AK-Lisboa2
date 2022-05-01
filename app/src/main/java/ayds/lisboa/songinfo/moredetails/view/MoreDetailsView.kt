@@ -1,4 +1,4 @@
-package ayds.lisboa.songinfo.moredetails
+package ayds.lisboa.songinfo.moredetails.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
@@ -19,6 +19,8 @@ import android.widget.ImageView
 import retrofit2.Response
 import java.io.IOException
 import java.lang.StringBuilder
+import ayds.lisboa.songinfo.moredetails.model.repository.external.lastFM.LastFMAPI
+import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.DataBase
 
 private const val ARTIST_NAME = "artistName"
 private const val URL_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"

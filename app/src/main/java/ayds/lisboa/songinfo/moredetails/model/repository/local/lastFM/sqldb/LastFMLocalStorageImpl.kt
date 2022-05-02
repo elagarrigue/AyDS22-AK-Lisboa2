@@ -1,26 +1,16 @@
-package ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM
+package ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.sqldb
 
 import android.database.sqlite.SQLiteOpenHelper
 import android.database.sqlite.SQLiteDatabase
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.util.Log
+import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLocalStorage
 
-const val DATABASE_NAME = "dictionary.db"
-const val ARTIST_COLUMN = "artist"
-const val INFO_COLUMN = "info"
-const val SOURCE_COLUMN = "source"
-const val ID_COLUMN = "id"
-const val ARTIST_TABLE_NAME = "artists"
-const val ARTIST_TABLE_QUERY = "create table $ARTIST_TABLE_NAME ($ID_COLUMN INTEGER PRIMARY KEY AUTOINCREMENT, $ARTIST_COLUMN string, $INFO_COLUMN string, $SOURCE_COLUMN integer)"
-
-class LastFMLocalStorageImpl(context: Context?) : LastFMLocalStorage,SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
+class LastFMLocalStorageImpl(context: Context?) : LastFMLocalStorage, SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
    override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(
-            ARTIST_TABLE_QUERY
-        )
+        db.execSQL(createArtistTableQuery)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}

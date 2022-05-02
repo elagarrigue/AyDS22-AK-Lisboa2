@@ -1,6 +1,5 @@
 package ayds.lisboa.songinfo.moredetails.model
 
-
 import ayds.lisboa.songinfo.home.model.entities.Song
 import ayds.lisboa.songinfo.home.model.repository.SongRepository
 import ayds.lisboa.songinfo.moredetails.model.repository.ArtistInfoRepository
@@ -12,13 +11,11 @@ import ayds.observer.Subject
 interface  MoreDetailsModel {
     fun searchArtist(name: String)
 
-    fun getArtistById(id: String): Song
+    //fun getArtistById(id: String): Song
 
 }
 
 internal class MoreDetailsModelImpl(private val repository: ArtistInfoRepository) : MoreDetailsModel {
-
-
 
     override fun searchArtist(name: String) {
         repository.getArtistByName(name).let {
@@ -26,6 +23,6 @@ internal class MoreDetailsModelImpl(private val repository: ArtistInfoRepository
         }
     }
 
-    override fun getArtistById(id: String): Song = repository.getSongById(id)
+    //override fun getArtistById(id: String): Song = repository.getArtistById(id)
 }
 

@@ -5,11 +5,21 @@ interface Artist {
     val artistName: String
     val artistInfo: String
     val source: Integer
+    var isLocallyStored: Boolean
 }
 
 data class LastFMArtist(
     override val id: Integer,
     override val artistName: String,
     override val artistInfo: String,
-    override val source: Integer
+    override val source: Integer,
+    override var isLocallyStored: Boolean = false
 ): Artist
+
+object EmptyArtist: Artist{
+    override val id: Integer=,
+    override val artistName: String,
+    override val artistInfo: String,
+    override val source: Integer,
+    override var isLocallyStored: Boolean = false
+}

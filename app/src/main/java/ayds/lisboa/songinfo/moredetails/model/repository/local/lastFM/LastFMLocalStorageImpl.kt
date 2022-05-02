@@ -15,7 +15,7 @@ const val ID_COLUMN = "id"
 const val ARTIST_TABLE_NAME = "artists"
 const val ARTIST_TABLE_QUERY = "create table $ARTIST_TABLE_NAME ($ID_COLUMN INTEGER PRIMARY KEY AUTOINCREMENT, $ARTIST_COLUMN string, $INFO_COLUMN string, $SOURCE_COLUMN integer)"
 
-class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
+class LastFMLocalStorageImpl(context: Context?) : LastFMLocalStorage,SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
    override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
@@ -25,7 +25,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
-    fun saveArtist(artist: String?, info: String?) {
+    override fun saveArtist(artist: String?, info: String?) {
         this.writableDatabase.insert(ARTIST_TABLE_NAME, null, getContentValues(artist,info))
     }
 
@@ -37,7 +37,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
         return values
     }
 
-    fun getInfo(artist: String): String? = getArtistInfoFromQuery(makeQuery(artist))
+    override fun getInfo(name: String): String? = getArtistInfoFromQuery(makeQuery(artist))
 
     private fun makeQuery(artist: String): Cursor =
         this.readableDatabase.query(

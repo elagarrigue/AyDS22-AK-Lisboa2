@@ -16,15 +16,18 @@ import android.text.Html
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModel
 import retrofit2.Response
 import java.io.IOException
 import java.lang.StringBuilder
 import ayds.lisboa.songinfo.moredetails.model.repository.external.lastFM.LastFMAPI
-import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.DataBase
+import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLocalStorage
+import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLocalStorageImpl
 
-private const val ARTIST_NAME = "artistName"
+
+
+
 private const val URL_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
-private const val LOCAL_DATABASE_PREFIX = "[*]"
 private const val ARTIST = "artist"
 private const val RETROFIT_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 private const val BIOGRAPHY = "bio"
@@ -35,10 +38,12 @@ private const val NO_RESULT_MESSAGE = "No Results"
 class OtherInfoWindow : AppCompatActivity() {
     private lateinit var textPaneArtistBio: TextView
     private lateinit var artistName: String
-    private lateinit var dataBase: DataBase
+    private lateinit var dataBase: LastFMLocalStorage
     private lateinit var imageView: ImageView
     private lateinit var lastFMAPI: LastFMAPI
     private lateinit var openUrlButton: Button
+
+    private lateinit var moreDetailsModel:MoreDetailsModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +56,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun initDataBase(){
-        dataBase = DataBase(this)
+        dataBase = LastFMLocalStorageImpl(this)
     }
 
     private fun initLastFMAPI(){

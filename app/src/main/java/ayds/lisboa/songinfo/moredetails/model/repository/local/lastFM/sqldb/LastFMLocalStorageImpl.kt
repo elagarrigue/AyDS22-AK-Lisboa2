@@ -4,10 +4,13 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.database.sqlite.SQLiteDatabase
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
+import ayds.lisboa.songinfo.moredetails.model.entities.LastFMArtist
 import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLocalStorage
 
-class LastFMLocalStorageImpl(context: Context?) : LastFMLocalStorage, SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
+class LastFMLocalStorageImpl(
+    context: Context?,
+    private val cursorToLastFMArtistMapper: CursorToLastFMArtistMapperImpl,
+) : LastFMLocalStorage, SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
    override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(createArtistTableQuery)
@@ -23,24 +26,26 @@ class LastFMLocalStorageImpl(context: Context?) : LastFMLocalStorage, SQLiteOpen
         val values = ContentValues()
         values.put(ARTIST_COLUMN, artist)
         values.put(INFO_COLUMN, info)
-        values.put(SOURCE_COLUMN, 1)
         return values
     }
 
-    override fun getInfo(name: String): String? = getArtistInfoFromQuery(makeQuery(artist))
+    override fun getArtist(name: String): LastFMArtist? = makeQuery(name)
 
-    private fun makeQuery(artist: String): Cursor =
-        this.readableDatabase.query(
+    private fun makeQuery(name: String): LastFMArtist? {
+        val cursor = this.readableDatabase.query(
             ARTIST_TABLE_NAME,
             arrayOf(ID_COLUMN, ARTIST_COLUMN, INFO_COLUMN),
             "$ARTIST_COLUMN  = ?",
-            arrayOf(artist),  
+            arrayOf(name),
             null,
             null,
             "$ARTIST_COLUMN DESC"
         )
 
-    private fun getArtistInfoFromQuery(cursor: Cursor) : String?{
+        return cursorToLastFMArtistMapper.map(cursor)
+    }
+
+    /*private fun getArtistInfoFromQuery(cursor: Cursor) : String?{
         var artistInfo: String? = null
         if (cursor.moveToNext()) {
             artistInfo = cursor.getString(
@@ -49,5 +54,5 @@ class LastFMLocalStorageImpl(context: Context?) : LastFMLocalStorage, SQLiteOpen
         }
         cursor.close()
         return artistInfo
-    }
+    }*/
 }

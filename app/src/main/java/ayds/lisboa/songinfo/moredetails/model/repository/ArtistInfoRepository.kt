@@ -34,17 +34,16 @@ internal class ArtistInfoRepositoryImpl: ArtistInfoRepository {
 
 
     override fun getArtistByName(name: String) {
-        var artistInfo = getArtistInfoFromDataBase(name)
-        if (existInDataBase(artistInfo)) {
+        var artist = lastFMLocalStorage.getArtist(name)
+        /*if (existInDataBase(artistInfo)) {
             artistInfo = "$LOCAL_DATABASE_PREFIX$artistInfo"
         } else {
             artistInfo = getArtistInfoFromService()
             saveArtistInDataBase(artistInfo)
-        }
-
-
+        }*/
+        
         when {
-            artistInfo != null -> markArtistAsLocal()
+            artist != null -> markArtistAsLocal(artist)
             else -> {
                 try {
                     spotifySong = spotifyTrackService.getSong(term)

@@ -7,12 +7,12 @@ import java.sql.SQLException
 
 interface CursorToLastFMArtistMapper {
 
-    fun map(cursor: Cursor): Artist?
+    fun map(cursor: Cursor): LastFMArtist?
 }
 
-internal class CursorToLastFMArtistMapperImpl : CursorToLastFMArtistMapper {
+class CursorToLastFMArtistMapperImpl : CursorToLastFMArtistMapper {
 
-    override fun map(cursor: Cursor): Artist? =
+    override fun map(cursor: Cursor): LastFMArtist? =
         try {
             with(cursor) {
                 if (moveToNext()) {

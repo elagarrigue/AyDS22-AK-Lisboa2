@@ -2,18 +2,22 @@ package ayds.lisboa.songinfo.moredetails.model.repository
 
 import android.content.Intent
 import android.net.Uri
+import ayds.lisboa.songinfo.home.model.entities.EmptySong
+import ayds.lisboa.songinfo.home.model.entities.Song
 import ayds.lisboa.songinfo.home.model.entities.SpotifySong
 import ayds.lisboa.songinfo.moredetails.model.entities.Artist
+import ayds.lisboa.songinfo.moredetails.model.entities.EmptyArtist
 import ayds.lisboa.songinfo.moredetails.model.entities.LastFMArtist
+import ayds.lisboa.songinfo.moredetails.model.repository.external.LastFMService
 import ayds.lisboa.songinfo.moredetails.model.repository.external.lastFM.LastFMAPI
 import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLocalStorage
+import ayds.lisboa.songinfo.moredetails.model.repository.external.lastFMService
 import ayds.lisboa.songinfo.moredetails.view.*
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import retrofit2.Response
 import java.io.IOException
-import java.lang.StringBuilder
 
 
 private const val LOCAL_DATABASE_PREFIX = "[*]"
@@ -28,28 +32,28 @@ interface ArtistInfoRepository{
 internal class ArtistInfoRepositoryImpl: ArtistInfoRepository {
 
     private lateinit var lastFMLocalStorage: LastFMLocalStorage
-    private lateinit var lastFMAPI: LastFMAPI
+    private lateinit var lastFMService: LastFMService
 
     private lateinit var artistName: String
 
 
-    override fun getArtistByName(name: String) {
-        var artist = lastFMLocalStorage.getArtist(name)
+    override fun getArtistByName(name: String): Artist {
+        var lastFMArtist = lastFMLocalStorage.getArtist(name)
         /*if (existInDataBase(artistInfo)) {
             artistInfo = "$LOCAL_DATABASE_PREFIX$artistInfo"
         } else {
             artistInfo = getArtistInfoFromService()
             saveArtistInDataBase(artistInfo)
         }*/
-        
+
         when {
-            artist != null -> markArtistAsLocal(artist)
+            lastFMArtist != null -> markArtistAsLocal(lastFMArtist)
             else -> {
                 try {
-                    spotifySong = spotifyTrackService.getSong(term)
+                    lastFMArtist = lastFMService.getArtist(name)
 
-                    spotifySong?.let {
-                        when {
+                    lastFMArtist?.let {
+                        when { //PREGUNTAR
                             it.isSavedSong() -> spotifyLocalStorage.updateSongTerm(term, it.id)
                             else -> spotifyLocalStorage.insertSong(term, it)
                         }
@@ -59,12 +63,20 @@ internal class ArtistInfoRepositoryImpl: ArtistInfoRepository {
                 }
             }
         }
-        return artistInfo
+
+        return artist ?: EmptyArtist
     }
 
     private fun markArtistAsLocal(artist: LastFMArtist) {
         artist.isLocallyStored = true
     }
+
+    override fun getSongById(id: String): Song {
+        return lastFMLocalStorage.getSongById(id) ?: EmptySong
+    }
+
+    private fun LastFMArtist.isSavedSong() = lastFMLocalStorage.getSongById(id) != null
+
     private fun getArtistInfoFromDataBase(name:String) =
         lastFMLocalStorage.getInfo(name)
 

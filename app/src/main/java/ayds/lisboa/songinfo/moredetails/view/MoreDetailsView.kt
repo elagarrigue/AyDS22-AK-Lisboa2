@@ -59,7 +59,7 @@ class OtherInfoWindow : AppCompatActivity() {
         dataBase = LastFMLocalStorageImpl(this)
     }
 
-    private fun initLastFMAPI(){
+    /*private fun initLastFMAPI(){
         lastFMAPI = createRetrofit().create(LastFMAPI::class.java)
     }
 
@@ -67,7 +67,7 @@ class OtherInfoWindow : AppCompatActivity() {
         Retrofit.Builder()
             .baseUrl(RETROFIT_BASE_URL)
             .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
+            .build()*///ESTA EN MODEL
 
     private fun initViews() {
         initTextPaneArtistInfo()
@@ -106,7 +106,7 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    private fun getArtistInfoFromDataBaseOrService() : String {
+    /*private fun getArtistInfoFromDataBaseOrService() : String {
         var artistInfo = getArtistInfoFromDataBase()
         if (existInDataBase(artistInfo)) {
             artistInfo = "$LOCAL_DATABASE_PREFIX$artistInfo"
@@ -144,7 +144,7 @@ class OtherInfoWindow : AppCompatActivity() {
         lastFMAPI.getArtistInfo(artistName).execute()
 
     private fun getArtistBiography(jobj: JsonObject): JsonElement =
-        getArtist(jobj)[BIOGRAPHY].asJsonObject[CONTENT]
+        getArtist(jobj)[BIOGRAPHY].asJsonObject[CONTENT]*///ESTA EN MODEL
 
     private fun setOnClickerListenerToOpenURLButton(queryArtistInfo: JsonObject) {
         openUrlButton.setOnClickListener {
@@ -158,11 +158,11 @@ class OtherInfoWindow : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun getArtistBiographyURL(jobj: JsonObject): String =
+    /*private fun getArtistBiographyURL(jobj: JsonObject): String =
         getArtist(jobj)[URL].asString
 
     private fun getArtist(jobj: JsonObject): JsonObject =
-        jobj[ARTIST].asJsonObject
+        jobj[ARTIST].asJsonObject*///ESTA EN MODEL
 
     private fun getStringArtistInfoFromService(artistBiography: JsonElement) : String {
         var artistInfo: String

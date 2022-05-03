@@ -11,7 +11,7 @@ import ayds.observer.Subject
 interface  MoreDetailsModel {
     fun searchArtist(name: String)
 
-    //fun getArtistById(id: String): Song
+    fun getArtistById(id: String): Song
 
 }
 
@@ -23,6 +23,6 @@ internal class MoreDetailsModelImpl(private val repository: ArtistInfoRepository
         }
     }
 
-    //override fun getArtistById(id: String): Song = repository.getArtistById(id)
+    override fun getArtistById(id: String): Song = repository.getArtistById(id)
 }
 

@@ -26,6 +26,7 @@ private const val ARTIST_NAME = "artistName"
 interface ArtistInfoRepository{
 
     fun getArtistByName(name: String): Artist
+    fun getArtistById(id: String): Artist
 }
 
 
@@ -34,11 +35,11 @@ internal class ArtistInfoRepositoryImpl: ArtistInfoRepository {
     private lateinit var lastFMLocalStorage: LastFMLocalStorage
     private lateinit var lastFMService: LastFMService
 
-    private lateinit var artistName: String
+   // private lateinit var artistName: String
 
 
     override fun getArtistByName(name: String): Artist {
-        var lastFMArtist = lastFMLocalStorage.getArtist(name)
+        var lastFMArtist = lastFMLocalStorage.getArtistByName(name)
         /*if (existInDataBase(artistInfo)) {
             artistInfo = "$LOCAL_DATABASE_PREFIX$artistInfo"
         } else {
@@ -48,6 +49,7 @@ internal class ArtistInfoRepositoryImpl: ArtistInfoRepository {
 
         when {
             lastFMArtist != null -> markArtistAsLocal(lastFMArtist)
+            //ACA HABRIA QUE AGREGARLE EL [*] A ARTIST INFO, NOSE SI HABRIA QUE HACERLO ACA O EN VIEW
             else -> {
                 try {
                     lastFMArtist = lastFMService.getArtist(name)

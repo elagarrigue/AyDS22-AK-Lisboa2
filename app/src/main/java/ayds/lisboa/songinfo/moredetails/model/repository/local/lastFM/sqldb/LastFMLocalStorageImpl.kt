@@ -29,7 +29,7 @@ class LastFMLocalStorageImpl(
         return values
     }
 
-    override fun getArtist(name: String): LastFMArtist? = makeQuery(name)
+    override fun getArtistByName(name: String): LastFMArtist? = makeQuery(name)
 
     private fun makeQuery(name: String): LastFMArtist? {
         val cursor = this.readableDatabase.query(

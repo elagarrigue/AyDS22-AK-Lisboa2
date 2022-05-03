@@ -12,15 +12,8 @@ private const val RETROFIT_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 
 class LastFMServiceImpl(): LastFMService {
 
-    private lateinit var lastFMAPI: LastFMAPI
-
-    override fun getArtist(name: String): LastFMArtist? {
-        TODO("Not yet implemented")
-    }
-
-    private fun initLastFMAPI(){
-        lastFMAPI = createRetrofit().create(LastFMAPI::class.java)
-    }
+    private val lastFMAPI: LastFMAPI = createRetrofit().create(LastFMAPI::class.java)
+    private val lastFMToArtistResolverResolver : LastFMToArtistResolverResolver = JsonToSongResolver()
 
     private fun createRetrofit() =
         Retrofit.Builder()
@@ -28,10 +21,18 @@ class LastFMServiceImpl(): LastFMService {
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
 
-    private fun getQueryBodyOfArtistInfoFromService() =
-        Gson().fromJson(getQueryResponseOfArtistInfoFromService().body(), JsonObject::class.java)
+    override fun getArtist(name: String): LastFMArtist? {
+        val callResponse = getArtistFromService(name)
+        return lastFMToArtistResolverResolver.getArtistFromExternalData(callResponse.body())
+    }
 
-    private fun getQueryResponseOfArtistInfoFromService() : Response<String> =
-        lastFMAPI.getArtistInfo(artistName).execute()
+    private fun getArtistFromService(name: String): Response<String> {
+        return getQueryResponseOfArtistInfoFromService(name)
+    }
+
+
+    private fun getQueryResponseOfArtistInfoFromService(name: String) : Response<String> =
+        lastFMAPI.getArtistInfo(name).execute()
+        //VER LO DE LOS ? Y !
 
 }

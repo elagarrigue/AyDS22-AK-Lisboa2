@@ -21,8 +21,10 @@ internal class JsonToArtistResolver : LastFMToArtistResolver {
         try {
             queryArtistInfo = Gson().fromJson(serviceData, JsonObject::class.java)
         }
-        //PREGUNTA SI PARA OBTENER EL ID, ARTISTNAME Y ARTISTINFO HAY QUE HACERLO COMO EN
-        //SPOTIFYTOSONGRESOLVER
+        catch (e:Exception ){
+            null
+        }
+
     }
 
 }

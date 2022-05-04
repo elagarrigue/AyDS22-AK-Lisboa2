@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.content.Context
 import ayds.lisboa.songinfo.home.model.entities.SpotifySong
 import ayds.lisboa.songinfo.home.model.repository.local.spotify.sqldb.SONGS_TABLE
+import ayds.lisboa.songinfo.moredetails.model.entities.Artist
 import ayds.lisboa.songinfo.moredetails.model.entities.LastFMArtist
 import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLocalStorage
 
@@ -20,14 +21,14 @@ class LastFMLocalStorageImpl(
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
-    override fun saveArtist(artist: String?, info: String?) {
-        this.writableDatabase.insert(ARTIST_TABLE_NAME, null, getContentValues(artist,info))
+    override fun saveArtist(artist: Artist) {
+        this.writableDatabase.insert(ARTIST_TABLE_NAME, null, getContentValues(artist))
     }
 
-    private fun getContentValues(artist: String?,info: String?): ContentValues {
+    private fun getContentValues(artist: Artist): ContentValues {
         val values = ContentValues()
-        values.put(ARTIST_COLUMN, artist)
-        values.put(INFO_COLUMN, info)
+        values.put(ARTIST_COLUMN, artist.artistName)
+        values.put(INFO_COLUMN, artist.artistInfo)
         return values
     }
 

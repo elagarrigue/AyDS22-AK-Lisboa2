@@ -1,12 +1,13 @@
 package ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM
 
+import ayds.lisboa.songinfo.moredetails.model.entities.Artist
 import ayds.lisboa.songinfo.moredetails.model.entities.LastFMArtist
 
 interface LastFMLocalStorage {
 
-    fun getArtistByName(artist: String): LastFMArtist?
+    fun getArtistByName(name: String): LastFMArtist?
 
-    fun getArtistById(artist: String): LastFMArtist?
+    fun getArtistById(id: String): LastFMArtist?
 
-    fun saveArtist(artist: String?, info: String?)
+    fun saveArtist(artist: Artist)
 }

@@ -8,6 +8,6 @@ const val ARTIST_TABLE_NAME = "artists"
 
 const val createArtistTableQuery: String =
     "create table $ARTIST_TABLE_NAME (" +
-            "$ID_COLUMN string PRIMARY KEY, " +
+            "$ID_COLUMN integer primary key autoincrement, " +
             "$ARTIST_COLUMN string, " +
             "$INFO_COLUMN string )"

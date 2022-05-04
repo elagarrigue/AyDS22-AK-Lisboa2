@@ -17,7 +17,6 @@ class CursorToLastFMArtistMapperImpl : CursorToLastFMArtistMapper {
             with(cursor) {
                 if (moveToNext()) {
                     LastFMArtist(
-                        id = getString(getColumnIndexOrThrow(ID_COLUMN)),
                         artistName = getString(getColumnIndexOrThrow(ARTIST_COLUMN)),
                         artistInfo = getString(getColumnIndexOrThrow(INFO_COLUMN)),
                     )

@@ -1,9 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.model.repository.external.lastFM
 
 import ayds.lisboa.songinfo.moredetails.model.entities.LastFMArtist
-import ayds.lisboa.songinfo.moredetails.model.repository.external.LastFMService
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -29,7 +26,6 @@ class LastFMServiceImpl(): LastFMService {
     private fun getArtistFromService(name: String): Response<String?> {
         return getQueryResponseOfArtistInfoFromService(name)
     }
-
 
     private fun getQueryResponseOfArtistInfoFromService(name: String) : Response<String?> =
         lastFMAPI.getArtistInfo(name)!!.execute()

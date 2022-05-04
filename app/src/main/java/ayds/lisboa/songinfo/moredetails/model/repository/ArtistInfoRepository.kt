@@ -1,10 +1,9 @@
 package ayds.lisboa.songinfo.moredetails.model.repository
 
-
 import ayds.lisboa.songinfo.moredetails.model.entities.Artist
 import ayds.lisboa.songinfo.moredetails.model.entities.EmptyArtist
 import ayds.lisboa.songinfo.moredetails.model.entities.LastFMArtist
-import ayds.lisboa.songinfo.moredetails.model.repository.external.LastFMService
+import ayds.lisboa.songinfo.moredetails.model.repository.external.lastFM.LastFMService
 import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLocalStorage
 
 private const val LOCAL_DATABASE_PREFIX = "[*]"
@@ -16,14 +15,10 @@ interface ArtistInfoRepository{
     fun getArtistById(id: String): Artist
 }
 
-
-internal class ArtistInfoRepositoryImpl: ArtistInfoRepository {
-
-    private lateinit var lastFMLocalStorage: LastFMLocalStorage
-    private lateinit var lastFMService: LastFMService
-
-   // private lateinit var artistName: String
-
+internal class ArtistInfoRepositoryImpl(
+    private val lastFMLocalStorage: LastFMLocalStorage,
+    private val lastFMService: LastFMService
+): ArtistInfoRepository {
 
     override fun getArtistByName(name: String): Artist {
         var lastFMArtist = lastFMLocalStorage.getArtistByName(name)

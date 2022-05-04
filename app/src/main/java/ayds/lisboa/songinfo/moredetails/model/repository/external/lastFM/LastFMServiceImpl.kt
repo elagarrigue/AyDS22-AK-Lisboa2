@@ -13,7 +13,7 @@ private const val RETROFIT_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 class LastFMServiceImpl(): LastFMService {
 
     private val lastFMAPI: LastFMAPI = createRetrofit().create(LastFMAPI::class.java)
-    private val lastFMToArtistResolverResolver : LastFMToArtistResolver = JsonToArtistResolver()
+    private val lastFMToArtistResolver : LastFMToArtistResolver = JsonToArtistResolver()
 
     private fun createRetrofit() =
         Retrofit.Builder()
@@ -23,7 +23,7 @@ class LastFMServiceImpl(): LastFMService {
 
     override fun getArtist(name: String): LastFMArtist? {
         val callResponse = getArtistFromService(name)
-        return lastFMToArtistResolverResolver.getArtistFromExternalData(callResponse.body())
+        return lastFMToArtistResolver.getArtistFromExternalData(callResponse.body(), name)
     }
 
     private fun getArtistFromService(name: String): Response<String?> {

@@ -73,8 +73,8 @@ internal class ArtistInfoRepositoryImpl: ArtistInfoRepository {
         artist.isLocallyStored = true
     }
 
-    override fun getSongById(id: String): Song {
-        return lastFMLocalStorage.getSongById(id) ?: EmptySong
+    override fun getArtistById(id: String): Artist {
+        return lastFMLocalStorage.getArtistById(id) ?: EmptyArtist
     }
 
     private fun LastFMArtist.isSavedSong() = lastFMLocalStorage.getSongById(id) != null

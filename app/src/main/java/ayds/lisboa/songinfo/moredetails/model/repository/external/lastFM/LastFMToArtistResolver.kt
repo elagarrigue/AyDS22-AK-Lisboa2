@@ -6,11 +6,11 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 
 
-interface LastFMToArtistResolverResolver {
+interface LastFMToArtistResolver {
     fun getArtistFromExternalData(serviceData: String?): LastFMArtist?
 }
 
-internal class JsonToSongResolver : LastFMToArtistResolverResolver {
+internal class JsonToArtistResolver : LastFMToArtistResolver {
 
     //---------------------------------------------------------------------
     //VER ESO DE QUE AL STRING ARTISTINFO HAY QUE APLICARLE LOS METODOS addLineBreaks Y textToHtml

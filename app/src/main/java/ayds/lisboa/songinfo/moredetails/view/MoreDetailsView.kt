@@ -56,7 +56,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun initDataBase(){
-        dataBase = LastFMLocalStorageImpl(this)
+        dataBase =  LastFMLocalStorageImpl(this)
     }
 
     /*private fun initLastFMAPI(){

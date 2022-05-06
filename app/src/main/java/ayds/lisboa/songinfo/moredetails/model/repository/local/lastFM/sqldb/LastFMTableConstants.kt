@@ -11,5 +11,5 @@ const val createArtistTableQuery: String =
     "create table $ARTIST_TABLE_NAME (" +
             "$ID_COLUMN integer primary key autoincrement, " +
             "$ARTIST_COLUMN string, " +
-            "$INFO_COLUMN string " +
+            "$INFO_COLUMN string, " +
             "$URL_COLUMN string )"

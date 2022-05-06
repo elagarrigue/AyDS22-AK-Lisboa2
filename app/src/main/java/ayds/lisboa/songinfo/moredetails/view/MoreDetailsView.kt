@@ -1,5 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.view
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
 import android.os.Bundle
@@ -37,6 +39,7 @@ class MoreDetailsView : AppCompatActivity() {
         initMoreDetailsController()
         getArtistInfo()
         setArtistInfoInView()
+        setOnClickerListenerToOpenURLButton()
     }
 
     private fun initViews() {
@@ -95,17 +98,22 @@ class MoreDetailsView : AppCompatActivity() {
         }
 
 
-    /*private fun setOnClickerListenerToOpenURLButton(queryArtistInfo: JsonObject) {
+    /*
+    private fun notifyOpenURL() {
+        onActionSubject.notify(HomeUiEvent.OpenSongUrl)
+    }*/
+
+    private fun setOnClickerListenerToOpenURLButton() {
         openUrlButton.setOnClickListener {
-            onClickActionOpenURLButton(queryArtistInfo)
+            onClickActionOpenURLButton()
         }
     }
 
-    private fun onClickActionOpenURLButton(queryArtistInfo: JsonObject){
+    private fun onClickActionOpenURLButton(){
         val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(getArtistBiographyURL(queryArtistInfo))
+        intent.data = Uri.parse(artist.artistURL)
         startActivity(intent)
-    }*/
+    }
 
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"

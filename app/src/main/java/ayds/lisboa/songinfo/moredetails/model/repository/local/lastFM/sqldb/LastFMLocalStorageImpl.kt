@@ -29,6 +29,7 @@ class LastFMLocalStorageImpl(
         val values = ContentValues()
         values.put(ARTIST_COLUMN, artist.artistName)
         values.put(INFO_COLUMN, artist.artistInfo)
+        values.put(URL_COLUMN, artist.artistURL)
         return values
     }
 
@@ -37,7 +38,7 @@ class LastFMLocalStorageImpl(
     override fun getArtistByName(name: String): LastFMArtist? {
         val cursor = this.readableDatabase.query(
             ARTIST_TABLE_NAME,
-            arrayOf(ID_COLUMN, ARTIST_COLUMN, INFO_COLUMN),
+            arrayOf(ID_COLUMN, ARTIST_COLUMN, INFO_COLUMN, URL_COLUMN),
             "$ARTIST_COLUMN  = ?",
             arrayOf(name),
             null,
@@ -51,7 +52,7 @@ class LastFMLocalStorageImpl(
     override fun getArtistById(id: String): LastFMArtist? {
         val cursor = readableDatabase.query(
             ARTIST_TABLE_NAME,
-            arrayOf(ID_COLUMN, ARTIST_COLUMN, INFO_COLUMN),
+            arrayOf(ID_COLUMN, ARTIST_COLUMN, INFO_COLUMN, URL_COLUMN),
             "$ID_COLUMN  = ?",
             arrayOf(id),
             null,

@@ -19,6 +19,7 @@ class CursorToLastFMArtistMapperImpl : CursorToLastFMArtistMapper {
                     LastFMArtist(
                         artistName = getString(getColumnIndexOrThrow(ARTIST_COLUMN)),
                         artistInfo = getString(getColumnIndexOrThrow(INFO_COLUMN)),
+                        artistURL = getString(getColumnIndexOrThrow(URL_COLUMN))
                     )
                 } else {
                     null

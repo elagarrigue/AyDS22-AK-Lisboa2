@@ -25,7 +25,6 @@ internal class ArtistInfoRepositoryImpl(
 
         when {
             lastFMArtist != null -> markArtistAsLocal(lastFMArtist)
-            //ACA HABRIA QUE AGREGARLE EL [*] A ARTIST INFO, NOSE SI HABRIA QUE HACERLO ACA O EN VIEW
             else -> {
                 try {
                     lastFMArtist = lastFMService.getArtist(name)

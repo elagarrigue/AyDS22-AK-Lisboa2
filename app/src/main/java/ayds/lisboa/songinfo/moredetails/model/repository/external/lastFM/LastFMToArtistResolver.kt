@@ -14,6 +14,7 @@ interface LastFMToArtistResolver {
 private const val BIOGRAPHY = "bio"
 private const val CONTENT = "content"
 private const val ARTIST = "artist"
+private const val URL = "url"
 private const val NO_RESULT_MESSAGE = "No Results"
 
 internal class JsonToArtistResolver : LastFMToArtistResolver {
@@ -31,7 +32,7 @@ internal class JsonToArtistResolver : LastFMToArtistResolver {
             queryArtistInfo = Gson().fromJson(serviceData, JsonObject::class.java)
             artistBiography = getArtistBiography(queryArtistInfo)
             getStringArtistInfoFromService(artistBiography)
-            LastFMArtist(artistName,getStringArtistInfoFromService(artistBiography) )
+            LastFMArtist(artistName,getStringArtistInfoFromService(artistBiography),getArtistBiographyURL(queryArtistInfo))
         }
         catch (e:Exception ){
             null
@@ -57,6 +58,8 @@ internal class JsonToArtistResolver : LastFMToArtistResolver {
     private fun existInService(artistBiography: JsonElement?) =
         artistBiography != null
 
+    private fun getArtistBiographyURL(jobj: JsonObject): String =
+        getArtist(jobj)[URL].asString
 
     //VER SI ESTOS DOS METODOS TIENEN QUE IR ACA O EN OTRA CLASE
     private fun addLineBreaks(artistBiography: JsonElement) : String =

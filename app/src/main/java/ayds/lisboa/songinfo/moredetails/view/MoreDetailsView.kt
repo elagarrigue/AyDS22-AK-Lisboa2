@@ -9,9 +9,13 @@ import android.text.Html
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import ayds.lisboa.songinfo.home.view.HomeUiEvent
+import ayds.lisboa.songinfo.moredetails.controller.MoreDetailsController
+import ayds.lisboa.songinfo.moredetails.controller.MoreDetailsControllerInjector
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModel
 import ayds.lisboa.songinfo.moredetails.model.entities.Artist
 import ayds.lisboa.songinfo.moredetails.model.repository.MoreDetailsModelInjector
+import ayds.observer.Observable
 
 private const val URL_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
 private const val ARTIST_NAME = "artistName"
@@ -22,6 +26,7 @@ class MoreDetailsView : AppCompatActivity() {
     private lateinit var imageView: ImageView
     private lateinit var openUrlButton: Button
     private lateinit var moreDetailsModel: MoreDetailsModel
+    private lateinit var moreDetailsController: MoreDetailsController
     private lateinit var artist: Artist
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +34,7 @@ class MoreDetailsView : AppCompatActivity() {
         setContentView(R.layout.activity_other_info)
         initViews()
         initMoreDetailsModel()
+        initMoreDetailsController()
         getArtistInfo()
         setArtistInfoInView()
     }
@@ -44,6 +50,10 @@ class MoreDetailsView : AppCompatActivity() {
         moreDetailsModel = MoreDetailsModelInjector.getMoreDetailsModel()
     }
 
+    private fun initMoreDetailsController() {
+        moreDetailsController = MoreDetailsControllerInjector.onViewStarted(this)
+    }
+
     private fun getArtistName() : String =
         intent.getStringExtra(ARTIST_NAME)?:""
 
@@ -53,9 +63,9 @@ class MoreDetailsView : AppCompatActivity() {
     }
 
     private fun getArtistInfo() {
-        Thread {
-            artist = moreDetailsModel.searchArtist(getArtistName())
-        }.start()
+        //Thread {
+            artist = moreDetailsController.searchArtist(getArtistName())
+        //}.start()
     }
 
     private fun setArtistInfoInView() {
@@ -75,6 +85,7 @@ class MoreDetailsView : AppCompatActivity() {
         }
     }
 
+    //VER SI ESTO TIENE QUE IR EN OTRA CLASE O ACA
     private fun getStringArtistInfo() =
         if (artist.isLocallyStored) {
             "$LOCAL_DATABASE_PREFIX${artist.artistInfo}"

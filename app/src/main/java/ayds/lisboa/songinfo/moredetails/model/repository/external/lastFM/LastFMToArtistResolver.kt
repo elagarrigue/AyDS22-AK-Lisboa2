@@ -57,6 +57,8 @@ internal class JsonToArtistResolver : LastFMToArtistResolver {
     private fun existInService(artistBiography: JsonElement?) =
         artistBiography != null
 
+
+    //VER SI ESTOS DOS METODOS TIENEN QUE IR ACA O EN OTRA CLASE
     private fun addLineBreaks(artistBiography: JsonElement) : String =
         artistBiography.asString.replace("\\n", "\n")
 

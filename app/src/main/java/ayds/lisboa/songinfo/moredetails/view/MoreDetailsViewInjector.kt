@@ -7,5 +7,6 @@ object MoreDetailsViewInjector {
 
     fun init(moreDetailsView: MoreDetailsView) {
         MoreDetailsModelInjector.initMoreDetailsModel(moreDetailsView)
+        MoreDetailsControllerInjector.onViewStarted(moreDetailsView)
     }
 }

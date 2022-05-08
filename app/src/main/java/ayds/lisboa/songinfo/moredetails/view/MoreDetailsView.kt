@@ -1,7 +1,5 @@
 package ayds.lisboa.songinfo.moredetails.view
 
-import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
 import android.os.Bundle
@@ -11,32 +9,46 @@ import android.text.Html
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import ayds.lisboa.songinfo.moredetails.controller.MoreDetailsController
-import ayds.lisboa.songinfo.moredetails.controller.MoreDetailsControllerInjector
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModel
 import ayds.lisboa.songinfo.moredetails.model.entities.Artist
 import ayds.lisboa.songinfo.moredetails.model.repository.MoreDetailsModelInjector
+import ayds.lisboa.songinfo.utils.UtilsInjector
+import ayds.lisboa.songinfo.utils.navigation.NavigationUtils
+import ayds.observer.Observable
+import ayds.observer.Subject
 
 private const val URL_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
 private const val ARTIST_NAME = "artistName"
 private const val LOCAL_DATABASE_PREFIX = "[*]"
 
+//FALTA HACER LA INTERFAZ DE VIEW
 class MoreDetailsView : AppCompatActivity() {
+
+    private val onActionSubject = Subject<MoreDetailsUiEvent>()
+    private lateinit var moreDetailsModel: MoreDetailsModel
+    private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
+
     private lateinit var textPaneArtistBio: TextView
     private lateinit var imageView: ImageView
     private lateinit var openUrlButton: Button
-    private lateinit var moreDetailsModel: MoreDetailsModel
-    private lateinit var moreDetailsController: MoreDetailsController
-    private lateinit var artist: Artist
+
+    val uiEventObservable: Observable<MoreDetailsUiEvent> = onActionSubject
+    var uiState: MoreDetailsUiState = MoreDetailsUiState()
+
+    fun openExternalLink(url: String) {
+        navigationUtils.openExternalUrl(this, url)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
+
         initViews()
         initMoreDetailsModel()
-        initMoreDetailsController()
-        getArtistInfo()
-        setOnClickerListenerToOpenURLButton()
+        updateArtistNameState()
+        initListener()
+        initObserver()
+        notifySearchAction()
     }
 
     private fun initViews() {
@@ -45,32 +57,47 @@ class MoreDetailsView : AppCompatActivity() {
         openUrlButton = findViewById<View>(R.id.openUrlButton) as Button
     }
 
+    private fun initTextPaneArtistInfo(){
+        textPaneArtistBio = findViewById(R.id.textPane2)
+    }
+
     private fun initMoreDetailsModel() {
         MoreDetailsViewInjector.init(this)
         moreDetailsModel = MoreDetailsModelInjector.getMoreDetailsModel()
     }
 
-    private fun initMoreDetailsController() {
-        moreDetailsController = MoreDetailsControllerInjector.onViewStarted(this)
-    }
-
-    private fun initTextPaneArtistInfo(){
-        textPaneArtistBio = findViewById(R.id.textPane2)
-    }
-
-    private fun getArtistInfo() {
-        Thread {
-            artist = moreDetailsModel.searchArtist(getArtistName())
-            setArtistInfoInView()
-        }.start()
+    private fun updateArtistNameState() {
+        uiState = uiState.copy(artistName = getArtistName())
     }
 
     private fun getArtistName() : String =
         intent.getStringExtra(ARTIST_NAME)?:""
 
-    private fun setArtistInfoInView() {
+    private fun initListener() {
+        openUrlButton.setOnClickListener { notifyOpenURLAction() }
+    }
+
+    private fun initObserver() {
+        moreDetailsModel.artistObservable
+            .subscribe { value -> setArtistInfoInView(value) }
+    }
+
+    private fun notifySearchAction() {
+        onActionSubject.notify(MoreDetailsUiEvent.Search)
+    }
+
+    private fun notifyOpenURLAction() {
+        onActionSubject.notify(MoreDetailsUiEvent.OpenURL)
+    }
+
+    private fun setArtistInfoInView(artist: Artist) {
+        updateArtistURLState(artist)
         setExternalServiceImg()
-        setArtistBioInTextPane()
+        setArtistBioInTextPane(artist)
+    }
+
+    private fun updateArtistURLState(artist: Artist) {
+        uiState = uiState.copy(artistURL = artist.artistURL)
     }
 
     private fun setExternalServiceImg() {
@@ -79,37 +106,20 @@ class MoreDetailsView : AppCompatActivity() {
         }
     }
 
-    private fun setArtistBioInTextPane(){
+    private fun setArtistBioInTextPane(artist: Artist){
         runOnUiThread {
-            textPaneArtistBio.text = Html.fromHtml(getStringArtistInfo())
+            textPaneArtistBio.text = Html.fromHtml(getStringArtistInfo(artist))
         }
     }
 
     //VER SI ESTO TIENE QUE IR EN OTRA CLASE O ACA
-    private fun getStringArtistInfo() =
+    private fun getStringArtistInfo(artist: Artist) =
         if (artist.isLocallyStored) {
             "$LOCAL_DATABASE_PREFIX${artist.artistInfo}"
         }
         else {
             artist.artistInfo
         }
-
-    /*
-    private fun notifyOpenURL() {
-       onActionSubject.notify(HomeUiEvent.OpenSongUrl)
-   }*/
-
-    private fun setOnClickerListenerToOpenURLButton() {
-        openUrlButton.setOnClickListener {
-            onClickActionOpenURLButton()
-        }
-    }
-
-    private fun onClickActionOpenURLButton() {
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(artist.artistURL)
-        startActivity(intent)
-    }
 
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"

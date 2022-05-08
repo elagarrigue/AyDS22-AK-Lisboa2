@@ -9,6 +9,8 @@ import android.text.Html
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import ayds.lisboa.songinfo.home.view.HomeUiEvent
+import ayds.lisboa.songinfo.home.view.HomeUiState
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModel
 import ayds.lisboa.songinfo.moredetails.model.entities.Artist
 import ayds.lisboa.songinfo.moredetails.model.repository.MoreDetailsModelInjector
@@ -21,8 +23,14 @@ private const val URL_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/th
 private const val ARTIST_NAME = "artistName"
 private const val LOCAL_DATABASE_PREFIX = "[*]"
 
-//FALTA HACER LA INTERFAZ DE VIEW
-class MoreDetailsView : AppCompatActivity() {
+interface MoreDetailsView {
+    val uiEventObservable: Observable<MoreDetailsUiEvent>
+    val uiState: MoreDetailsUiState
+
+    fun openExternalLink(url: String)
+}
+
+class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     private val onActionSubject = Subject<MoreDetailsUiEvent>()
     private lateinit var moreDetailsModel: MoreDetailsModel
@@ -32,10 +40,10 @@ class MoreDetailsView : AppCompatActivity() {
     private lateinit var imageView: ImageView
     private lateinit var openUrlButton: Button
 
-    val uiEventObservable: Observable<MoreDetailsUiEvent> = onActionSubject
-    var uiState: MoreDetailsUiState = MoreDetailsUiState()
+    override val uiEventObservable: Observable<MoreDetailsUiEvent> = onActionSubject
+    override var uiState: MoreDetailsUiState = MoreDetailsUiState()
 
-    fun openExternalLink(url: String) {
+    override fun openExternalLink(url: String) {
         navigationUtils.openExternalUrl(this, url)
     }
 

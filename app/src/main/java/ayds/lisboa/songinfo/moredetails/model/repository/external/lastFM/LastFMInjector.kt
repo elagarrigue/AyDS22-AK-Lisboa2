@@ -4,6 +4,6 @@ object LastFMInjector {
 
     val lastFMService: LastFMService = LastFMServiceImpl()
 
-    fun getFormatArtistInfoHelper(name: String) : FormatArtistInfoHelper =
-        FormatArtistInfoHelperImpl(name)
+    fun getFormatArtistInfoHelper() : FormatArtistInfoHelper =
+        FormatArtistInfoHelperImpl()
 }

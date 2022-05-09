@@ -9,13 +9,12 @@ interface FormatArtistInfoHelper {
     fun getStingArtistInfo(artistBiography: JsonElement) : String
 }
 
-class FormatArtistInfoHelperImpl(private val artistName: String) : FormatArtistInfoHelper {
+class FormatArtistInfoHelperImpl() : FormatArtistInfoHelper {
 
     override fun getStingArtistInfo(artistBiography: JsonElement) : String {
         var artistInfo: String
         if (existInService(artistBiography)) {
             artistInfo = addLineBreaks(artistBiography)
-            artistInfo = textToHtml(artistInfo)
         } else {
             artistInfo = NO_RESULT_MESSAGE
         }
@@ -27,19 +26,5 @@ class FormatArtistInfoHelperImpl(private val artistName: String) : FormatArtistI
 
     private fun addLineBreaks(artistBiography: JsonElement) : String =
         artistBiography.asString.replace("\\n", "\n")
-
-    private fun textToHtml(text: String): String {
-        val builder = StringBuilder()
-        builder.append("<html><div width=400>")
-        builder.append("<font face=\"arial\">")
-        val textWithBold = text
-            .replace("'", " ")
-            .replace("\n", "<br>")
-            .replace("(?i)" + artistName.toRegex(), "<b>" + artistName.toUpperCase() + "</b>")
-        builder.append(textWithBold)
-        builder.append("</font></div></html>")
-        return builder.toString()
-    }
-
 
 }

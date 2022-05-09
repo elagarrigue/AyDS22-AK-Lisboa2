@@ -35,6 +35,7 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     private val onActionSubject = Subject<MoreDetailsUiEvent>()
     private lateinit var moreDetailsModel: MoreDetailsModel
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
+    private var artistInfoFormatter: ArtistInfoFormatter = MoreDetailsViewInjector.artistInfoFormatter
 
     private lateinit var textPaneArtistBio: TextView
     private lateinit var imageView: ImageView
@@ -101,6 +102,7 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     private fun setArtistInfoInView(artist: Artist) {
         updateArtistURLState(artist)
         setExternalServiceImg()
+
         setArtistBioInTextPane(artist)
     }
 
@@ -116,17 +118,20 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun setArtistBioInTextPane(artist: Artist){
         runOnUiThread {
-            textPaneArtistBio.text = Html.fromHtml(getStringArtistInfo(artist))
+            textPaneArtistBio.text = Html.fromHtml(getFinalStringArtistInfo(artist.isLocallyStored,getArtistInfoInHtml(artist)))
         }
     }
 
+    private fun getArtistInfoInHtml(artist: Artist): String =
+        artistInfoFormatter.getHtmlArtistInfo(artist)
+
     //VER SI ESTO TIENE QUE IR EN OTRA CLASE O ACA
-    private fun getStringArtistInfo(artist: Artist) =
-        if (artist.isLocallyStored) {
-            "$LOCAL_DATABASE_PREFIX${artist.artistInfo}"
+    private fun getFinalStringArtistInfo(isLocallyStored: Boolean, artistInfo: String) =
+        if (isLocallyStored) {
+            "$LOCAL_DATABASE_PREFIX${artistInfo}"
         }
         else {
-            artist.artistInfo
+            artistInfo
         }
 
     companion object {

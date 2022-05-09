@@ -36,7 +36,7 @@ internal class JsonToArtistResolver : LastFMToArtistResolver {
         artistName = name
     }
     private fun initFormatArtistInfoHelper() {
-        formatArtistInfoHelper = LastFMInjector.getFormatArtistInfoHelper(artistName)
+        formatArtistInfoHelper = LastFMInjector.getFormatArtistInfoHelper()
     }
 
     private fun initQueryArtistInfo(serviceData: String?) {

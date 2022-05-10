@@ -6,9 +6,6 @@ import ayds.lisboa.songinfo.moredetails.model.entities.LastFMArtist
 import ayds.lisboa.songinfo.moredetails.model.repository.external.lastFM.LastFMService
 import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLocalStorage
 
-private const val LOCAL_DATABASE_PREFIX = "[*]"
-private const val ARTIST_NAME = "artistName"
-
 interface ArtistInfoRepository{
 
     fun getArtistByName(name: String): Artist

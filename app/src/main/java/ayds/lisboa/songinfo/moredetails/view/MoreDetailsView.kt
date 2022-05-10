@@ -59,12 +59,20 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun initViews() {
         initTextPaneArtistInfo()
-        imageView = findViewById<View>(R.id.imageView) as ImageView
-        openUrlButton = findViewById<View>(R.id.openUrlButton) as Button
+        initImageView()
+        initOpenUrlButton()
     }
 
     private fun initTextPaneArtistInfo(){
         textPaneArtistBio = findViewById(R.id.textPane2)
+    }
+
+    private fun initImageView() {
+        imageView = findViewById<View>(R.id.imageView) as ImageView
+    }
+
+    private fun initOpenUrlButton() {
+        openUrlButton = findViewById<View>(R.id.openUrlButton) as Button
     }
 
     private fun initMoreDetailsModel() {
@@ -83,21 +91,17 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         openUrlButton.setOnClickListener { notifyOpenURLAction() }
     }
 
+    private fun notifyOpenURLAction() {
+        onActionSubject.notify(MoreDetailsUiEvent.OpenURL)
+    }
+
     private fun initObserver() {
         moreDetailsModel.artistObservable
             .subscribe { value -> setArtistInfoInView(value) }
     }
 
-    private fun notifySearchAction() {
-        onActionSubject.notify(MoreDetailsUiEvent.Search)
-    }
-
-    private fun notifyOpenURLAction() {
-        onActionSubject.notify(MoreDetailsUiEvent.OpenURL)
-    }
-
     private fun setArtistInfoInView(artist: Artist) {
-        updateArtistURLState(artist)//SACARLO DE ACA: EFECTO SECUNDARIO
+        updateArtistURLState(artist)
         setExternalServiceImg()
         setArtistBioInTextPane(artist)
     }
@@ -120,6 +124,10 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun getStringArtistInfoFromArtistInfoFormatter(artist: Artist): String =
         artistInfoFormatter.getStringArtistInfo(artist)
+
+    private fun notifySearchAction() {
+        onActionSubject.notify(MoreDetailsUiEvent.Search)
+    }
 
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"

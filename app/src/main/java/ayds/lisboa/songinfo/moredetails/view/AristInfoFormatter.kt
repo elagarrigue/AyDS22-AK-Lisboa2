@@ -43,5 +43,4 @@ class ArtistInfoFormatterImpl() : ArtistInfoFormatter{
         else {
             artistInfo
         }
-
 }

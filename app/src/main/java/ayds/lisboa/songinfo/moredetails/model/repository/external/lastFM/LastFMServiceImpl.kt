@@ -7,7 +7,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 private const val RETROFIT_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 
-class LastFMServiceImpl(): LastFMService {
+class LastFMServiceImpl: LastFMService {
 
     private val lastFMAPI: LastFMAPI = createRetrofit().create(LastFMAPI::class.java)
     private val lastFMToArtistResolver : LastFMToArtistResolver = JsonToArtistResolver()
@@ -29,6 +29,5 @@ class LastFMServiceImpl(): LastFMService {
 
     private fun getQueryResponseOfArtistInfoFromService(name: String) : Response<String?> =
         lastFMAPI.getArtistInfo(name)!!.execute()
-        //VER LO DE LOS ? Y !
 
 }

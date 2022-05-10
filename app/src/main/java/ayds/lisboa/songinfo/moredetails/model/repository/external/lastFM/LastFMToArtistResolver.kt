@@ -17,17 +17,15 @@ private const val URL = "url"
 internal class JsonToArtistResolver : LastFMToArtistResolver {
 
     private lateinit var artistName: String
-    private lateinit var formatArtistInfoHelper: FormatArtistInfoHelper
     private lateinit var queryArtistInfo: JsonObject
 
     override fun getArtistFromExternalData(serviceData: String?, name: String): LastFMArtist? {
         return try {
             initArtistName(name)
-            initFormatArtistInfoHelper()
             initQueryArtistInfo(serviceData)
             createArtist()
         }
-        catch (e:Exception ){
+        catch (e:Exception) {
             null
         }
     }
@@ -35,16 +33,13 @@ internal class JsonToArtistResolver : LastFMToArtistResolver {
     private fun initArtistName(name: String) {
         artistName = name
     }
-    private fun initFormatArtistInfoHelper() {
-        formatArtistInfoHelper = LastFMInjector.getFormatArtistInfoHelper()
-    }
 
     private fun initQueryArtistInfo(serviceData: String?) {
         queryArtistInfo = Gson().fromJson(serviceData, JsonObject::class.java)
     }
 
     private fun createArtist(): LastFMArtist =
-     LastFMArtist(artistName,formatArtistInfoHelper.getStingArtistInfo(getArtistBiography(queryArtistInfo)),getArtistBiographyURL(queryArtistInfo))
+        LastFMArtist(artistName,getArtistBiography(queryArtistInfo).asString,getArtistBiographyURL(queryArtistInfo))
 
     private fun getArtistBiography(jobj: JsonObject): JsonElement =
         getArtist(jobj)[BIOGRAPHY].asJsonObject[CONTENT]

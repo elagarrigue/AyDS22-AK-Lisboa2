@@ -9,8 +9,6 @@ import android.text.Html
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import ayds.lisboa.songinfo.home.view.HomeUiEvent
-import ayds.lisboa.songinfo.home.view.HomeUiState
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModel
 import ayds.lisboa.songinfo.moredetails.model.entities.Artist
 import ayds.lisboa.songinfo.moredetails.model.repository.MoreDetailsModelInjector
@@ -21,7 +19,6 @@ import ayds.observer.Subject
 
 private const val URL_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
 private const val ARTIST_NAME = "artistName"
-private const val LOCAL_DATABASE_PREFIX = "[*]"
 
 interface MoreDetailsView {
     val uiEventObservable: Observable<MoreDetailsUiEvent>
@@ -100,9 +97,8 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun setArtistInfoInView(artist: Artist) {
-        updateArtistURLState(artist)
+        updateArtistURLState(artist)//SACARLO DE ACA: EFECTO SECUNDARIO
         setExternalServiceImg()
-
         setArtistBioInTextPane(artist)
     }
 
@@ -116,23 +112,14 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         }
     }
 
-    private fun setArtistBioInTextPane(artist: Artist){
+    private fun setArtistBioInTextPane(artist: Artist) {
         runOnUiThread {
-            textPaneArtistBio.text = Html.fromHtml(getFinalStringArtistInfo(artist.isLocallyStored,getArtistInfoInHtml(artist)))
+            textPaneArtistBio.text = Html.fromHtml(getStringArtistInfoFromArtistInfoFormatter(artist))
         }
     }
 
-    private fun getArtistInfoInHtml(artist: Artist): String =
-        artistInfoFormatter.getHtmlArtistInfo(artist)
-
-    //VER SI ESTO TIENE QUE IR EN OTRA CLASE O ACA
-    private fun getFinalStringArtistInfo(isLocallyStored: Boolean, artistInfo: String) =
-        if (isLocallyStored) {
-            "$LOCAL_DATABASE_PREFIX${artistInfo}"
-        }
-        else {
-            artistInfo
-        }
+    private fun getStringArtistInfoFromArtistInfoFormatter(artist: Artist): String =
+        artistInfoFormatter.getStringArtistInfo(artist)
 
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"

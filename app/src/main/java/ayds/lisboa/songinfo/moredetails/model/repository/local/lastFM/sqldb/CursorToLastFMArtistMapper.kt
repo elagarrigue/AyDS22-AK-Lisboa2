@@ -9,7 +9,7 @@ interface CursorToLastFMArtistMapper {
     fun map(cursor: Cursor): LastFMArtist?
 }
 
-class CursorToLastFMArtistMapperImpl : CursorToLastFMArtistMapper {
+internal class CursorToLastFMArtistMapperImpl : CursorToLastFMArtistMapper {
 
     override fun map(cursor: Cursor): LastFMArtist? =
         try {

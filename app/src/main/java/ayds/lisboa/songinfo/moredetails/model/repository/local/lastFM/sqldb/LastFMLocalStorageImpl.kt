@@ -8,9 +8,9 @@ import ayds.lisboa.songinfo.moredetails.model.entities.Artist
 import ayds.lisboa.songinfo.moredetails.model.entities.LastFMArtist
 import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLocalStorage
 
-class LastFMLocalStorageImpl(
+internal class LastFMLocalStorageImpl(
     context: Context?,
-    private val cursorToLastFMArtistMapper: CursorToLastFMArtistMapperImpl,
+    private val cursorToLastFMArtistMapper: CursorToLastFMArtistMapper,
 ) : LastFMLocalStorage, SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
    override fun onCreate(db: SQLiteDatabase) {

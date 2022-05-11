@@ -5,7 +5,7 @@ import ayds.lisboa.songinfo.moredetails.view.MoreDetailsView
 
 object MoreDetailsControllerInjector {
 
-    fun onViewStarted(moreDetailsView: MoreDetailsView) =
+    fun onViewStarted(moreDetailsView: MoreDetailsView): MoreDetailsController =
         MoreDetailsControllerImpl(MoreDetailsModelInjector.getMoreDetailsModel()).apply {
             setMoreDetailsView(moreDetailsView)
         }

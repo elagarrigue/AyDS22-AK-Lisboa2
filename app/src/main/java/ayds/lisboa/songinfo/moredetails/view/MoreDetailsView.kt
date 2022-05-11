@@ -26,7 +26,7 @@ interface MoreDetailsView {
     fun openExternalLink(url: String)
 }
 
-class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
+internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     private val onActionSubject = Subject<MoreDetailsUiEvent>()
     private lateinit var moreDetailsModel: MoreDetailsModel

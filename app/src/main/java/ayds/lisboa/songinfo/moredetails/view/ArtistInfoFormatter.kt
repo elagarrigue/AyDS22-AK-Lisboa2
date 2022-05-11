@@ -13,7 +13,7 @@ interface ArtistInfoFormatter {
     fun getStringArtistInfo(artist: Artist) : String
 }
 
-class ArtistInfoFormatterImpl: ArtistInfoFormatter{
+internal class ArtistInfoFormatterImpl: ArtistInfoFormatter{
 
     override fun getStringArtistInfo(artist: Artist): String {
         var artistInfo: String = addLineBreaks(artist.artistInfo)

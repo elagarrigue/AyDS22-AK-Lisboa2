@@ -11,7 +11,7 @@ interface MoreDetailsController {
     fun searchArtist()
 }
 
-class MoreDetailsControllerImpl(
+internal class MoreDetailsControllerImpl(
     private val moreDetailsModel: MoreDetailsModel
 ) : MoreDetailsController {
 

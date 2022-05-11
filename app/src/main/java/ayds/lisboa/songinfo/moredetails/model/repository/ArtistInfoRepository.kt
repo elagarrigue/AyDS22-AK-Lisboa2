@@ -9,7 +9,6 @@ import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLoca
 interface ArtistInfoRepository{
 
     fun getArtistByName(name: String): Artist
-    fun getArtistById(id: String): Artist
 }
 
 internal class ArtistInfoRepositoryImpl(
@@ -27,7 +26,7 @@ internal class ArtistInfoRepositoryImpl(
                     lastFMArtist = lastFMService.getArtist(name)
 
                     lastFMArtist?.let {
-                             lastFMLocalStorage.saveArtist(lastFMArtist!!)
+                        lastFMLocalStorage.saveArtist(it)
                     }
                 } catch (e: Exception) {
                     lastFMArtist = null
@@ -41,9 +40,4 @@ internal class ArtistInfoRepositoryImpl(
     private fun markArtistAsLocal(artist: LastFMArtist) {
         artist.isLocallyStored = true
     }
-
-    override fun getArtistById(id: String): Artist {
-        return lastFMLocalStorage.getArtistById(id) ?: EmptyArtist
-    }
-
 }

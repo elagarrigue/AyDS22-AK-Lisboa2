@@ -10,8 +10,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModel
+import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModelInjector
 import ayds.lisboa.songinfo.moredetails.model.entities.Artist
-import ayds.lisboa.songinfo.moredetails.model.repository.MoreDetailsModelInjector
 import ayds.lisboa.songinfo.utils.UtilsInjector
 import ayds.lisboa.songinfo.utils.navigation.NavigationUtils
 import ayds.observer.Observable
@@ -57,20 +57,8 @@ class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun initViews() {
-        initTextPaneArtistInfo()
-        initImageView()
-        initOpenUrlButton()
-    }
-
-    private fun initTextPaneArtistInfo(){
         textPaneArtistBio = findViewById(R.id.textPane2)
-    }
-
-    private fun initImageView() {
         imageView = findViewById<View>(R.id.imageView) as ImageView
-    }
-
-    private fun initOpenUrlButton() {
         openUrlButton = findViewById<View>(R.id.openUrlButton) as Button
     }
 

@@ -1,8 +1,8 @@
-package ayds.lisboa.songinfo.moredetails.model.repository
+package ayds.lisboa.songinfo.moredetails.model
 
 import android.content.Context
-import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModel
-import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModelImpl
+import ayds.lisboa.songinfo.moredetails.model.repository.ArtistInfoRepository
+import ayds.lisboa.songinfo.moredetails.model.repository.ArtistInfoRepositoryImpl
 import ayds.lisboa.songinfo.moredetails.model.repository.external.lastFM.LastFMInjector
 import ayds.lisboa.songinfo.moredetails.model.repository.external.lastFM.LastFMService
 import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLocalStorage

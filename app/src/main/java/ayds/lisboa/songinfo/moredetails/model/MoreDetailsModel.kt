@@ -10,8 +10,6 @@ interface  MoreDetailsModel {
     val artistObservable: Observable<Artist>
 
     fun searchArtist(name: String)
-
-    fun getArtistById(id: String): Artist
 }
 
 internal class MoreDetailsModelImpl(private val repository: ArtistInfoRepository) : MoreDetailsModel {
@@ -23,7 +21,5 @@ internal class MoreDetailsModelImpl(private val repository: ArtistInfoRepository
             artistObservable.notify(it)
         }
     }
-
-    override fun getArtistById(id: String): Artist = repository.getArtistById(id)
 }
 

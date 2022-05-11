@@ -1,7 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.view
 
 import ayds.lisboa.songinfo.moredetails.controller.MoreDetailsControllerInjector
-import ayds.lisboa.songinfo.moredetails.model.repository.MoreDetailsModelInjector
+import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModelInjector
 
 object MoreDetailsViewInjector {
 

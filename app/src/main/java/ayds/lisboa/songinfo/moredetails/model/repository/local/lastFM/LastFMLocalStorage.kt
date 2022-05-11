@@ -7,7 +7,5 @@ interface LastFMLocalStorage {
 
     fun getArtistByName(name: String): LastFMArtist?
 
-    fun getArtistById(id: String): LastFMArtist?
-
     fun saveArtist(artist: Artist)
 }

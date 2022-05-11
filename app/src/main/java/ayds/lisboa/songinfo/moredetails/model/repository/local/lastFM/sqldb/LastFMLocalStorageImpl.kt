@@ -43,17 +43,4 @@ class LastFMLocalStorageImpl(
         )
         return cursorToLastFMArtistMapper.map(cursor)
     }
-
-    override fun getArtistById(id: String): LastFMArtist? {
-        val cursor = readableDatabase.query(
-            ARTIST_TABLE_NAME,
-            arrayOf(ID_COLUMN, ARTIST_COLUMN, INFO_COLUMN, URL_COLUMN),
-            "$ID_COLUMN  = ?",
-            arrayOf(id),
-            null,
-            null,
-            null
-        )
-        return cursorToLastFMArtistMapper.map(cursor)
-    }
 }

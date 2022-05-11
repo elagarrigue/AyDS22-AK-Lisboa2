@@ -10,7 +10,7 @@ interface ArtistInfoFormatter {
     fun getStringArtistInfo(artist: Artist) : String
 }
 
-class ArtistInfoFormatterImpl() : ArtistInfoFormatter{
+class ArtistInfoFormatterImpl: ArtistInfoFormatter{
 
     override fun getStringArtistInfo(artist: Artist): String {
         var artistInfo: String
@@ -30,7 +30,7 @@ class ArtistInfoFormatterImpl() : ArtistInfoFormatter{
         val textWithBold = text
             .replace("'", " ")
             .replace("\n", "<br>")
-            .replace("(?i)" + artistName.toRegex(), "<b>" + artistName.toUpperCase() + "</b>")
+            .replace("(?i)" + artistName.toRegex(), "<b>" + artistName.uppercase() + "</b>")
         builder.append(textWithBold)
         builder.append("</font></div></html>")
         return builder.toString()

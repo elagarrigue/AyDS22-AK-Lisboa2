@@ -17,7 +17,6 @@ import ayds.lisboa.songinfo.utils.navigation.NavigationUtils
 import ayds.observer.Observable
 import ayds.observer.Subject
 
-private const val URL_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
 private const val ARTIST_NAME = "artistName"
 
 interface MoreDetailsView {

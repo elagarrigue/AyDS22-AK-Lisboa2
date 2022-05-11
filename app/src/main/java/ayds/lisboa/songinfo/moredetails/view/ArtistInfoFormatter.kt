@@ -4,6 +4,9 @@ import ayds.lisboa.songinfo.moredetails.model.entities.Artist
 import java.lang.StringBuilder
 
 private const val LOCAL_DATABASE_PREFIX = "[*]"
+private const val HEADER = "<html><div width=400>"
+private const val FOOTER = "</font></div></html>"
+private const val FONT = "<font face=\"arial\">"
 
 interface ArtistInfoFormatter {
 
@@ -13,8 +16,7 @@ interface ArtistInfoFormatter {
 class ArtistInfoFormatterImpl: ArtistInfoFormatter{
 
     override fun getStringArtistInfo(artist: Artist): String {
-        var artistInfo: String
-        artistInfo = addLineBreaks(artist.artistInfo)
+        var artistInfo: String = addLineBreaks(artist.artistInfo)
         artistInfo = textToHtml(artistInfo, artist.artistName)
         artistInfo = addPrefix(artist.isLocallyStored, artistInfo)
         return artistInfo
@@ -25,14 +27,14 @@ class ArtistInfoFormatterImpl: ArtistInfoFormatter{
 
     private fun textToHtml(text: String, artistName: String): String {
         val builder = StringBuilder()
-        builder.append("<html><div width=400>")
-        builder.append("<font face=\"arial\">")
+        builder.append(HEADER)
+        builder.append(FONT)
         val textWithBold = text
             .replace("'", " ")
             .replace("\n", "<br>")
             .replace("(?i)" + artistName.toRegex(), "<b>" + artistName.uppercase() + "</b>")
         builder.append(textWithBold)
-        builder.append("</font></div></html>")
+        builder.append(FOOTER)
         return builder.toString()
     }
 

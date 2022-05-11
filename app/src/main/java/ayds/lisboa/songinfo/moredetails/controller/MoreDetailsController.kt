@@ -39,5 +39,4 @@ class MoreDetailsControllerImpl(
     private fun openURL() {
         moreDetailsView.openExternalLink(moreDetailsView.uiState.artistURL)
     }
-
 }

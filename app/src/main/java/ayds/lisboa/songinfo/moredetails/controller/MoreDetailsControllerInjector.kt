@@ -1,6 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.controller
 
-import ayds.lisboa.songinfo.moredetails.model.repository.MoreDetailsModelInjector
+import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModelInjector
 import ayds.lisboa.songinfo.moredetails.view.MoreDetailsView
 
 

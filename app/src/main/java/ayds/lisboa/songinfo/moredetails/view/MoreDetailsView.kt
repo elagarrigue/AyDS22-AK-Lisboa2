@@ -17,8 +17,6 @@ import ayds.lisboa.songinfo.utils.navigation.NavigationUtils
 import ayds.observer.Observable
 import ayds.observer.Subject
 
-private const val ARTIST_NAME = "artistName"
-
 interface MoreDetailsView {
     val uiEventObservable: Observable<MoreDetailsUiEvent>
     val uiState: MoreDetailsUiState
@@ -72,7 +70,7 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun getArtistName() : String =
-        intent.getStringExtra(ARTIST_NAME)?:""
+        intent.getStringExtra(ARTIST_NAME_EXTRA)?:""
 
     private fun initListener() {
         openUrlButton.setOnClickListener { notifyOpenURLAction() }

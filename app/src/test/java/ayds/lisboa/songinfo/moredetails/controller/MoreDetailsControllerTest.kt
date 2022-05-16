@@ -1,10 +1,5 @@
 package ayds.lisboa.songinfo.moredetails.controller
 
-import ayds.lisboa.songinfo.home.controller.HomeControllerImpl
-
-import ayds.lisboa.songinfo.home.model.entities.Song
-import ayds.lisboa.songinfo.home.view.HomeUiEvent
-import ayds.lisboa.songinfo.home.view.HomeUiState
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModel
 import ayds.lisboa.songinfo.moredetails.view.MoreDetailsUiEvent
 import ayds.lisboa.songinfo.moredetails.view.MoreDetailsUiState
@@ -36,7 +31,7 @@ class MoreDetailsControllerTest {
     }
 
     @Test
-    fun `on search event should search song`() {
+    fun `on search event should search artist`() {
         every { moreDetailsView.uiState } returns MoreDetailsUiState(artistName = "artistName")
 
         onActionSubject.notify(MoreDetailsUiEvent.Search)
@@ -45,7 +40,7 @@ class MoreDetailsControllerTest {
     }
 
     @Test
-    fun `on open song url event should open external link`() {
+    fun `on open artist url event should open external link`() {
         every { moreDetailsView.uiState } returns MoreDetailsUiState(artistURL = "artistURL")
 
         onActionSubject.notify(MoreDetailsUiEvent.OpenURL)

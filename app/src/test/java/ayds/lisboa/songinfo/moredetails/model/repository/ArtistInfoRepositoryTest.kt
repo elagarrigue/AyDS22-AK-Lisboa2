@@ -1,11 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.model.repository
 
-import ayds.lisboa.songinfo.home.model.DatePrecision
-import ayds.lisboa.songinfo.home.model.DatePrecisionMapper
-import ayds.lisboa.songinfo.home.model.entities.SpotifySong
-import ayds.lisboa.songinfo.home.model.entities.EmptySong
-import ayds.lisboa.songinfo.home.model.repository.external.spotify.SpotifyTrackService
-import ayds.lisboa.songinfo.home.model.repository.local.spotify.SpotifyLocalStorage
+
 import ayds.lisboa.songinfo.moredetails.model.entities.EmptyArtist
 import ayds.lisboa.songinfo.moredetails.model.entities.LastFMArtist
 import ayds.lisboa.songinfo.moredetails.model.repository.external.lastFM.LastFMService
@@ -26,9 +21,8 @@ class ArtistInfoRepositoryTest {
         ArtistInfoRepositoryImpl(lastFMLocalStorage, lastFMService)
     }
 
-
     @Test
-    fun `given existing artist by term should return song and mark it as local`() {
+    fun `given existing artist by term should return artist and mark it as local`() {
         val artist = LastFMArtist("name", "info", "artistURL", false)
         every { lastFMLocalStorage.getArtistByName("name") } returns artist
 
@@ -52,7 +46,7 @@ class ArtistInfoRepositoryTest {
     }
 
     @Test
-    fun `given existing song by different term should get the song and update it`() {
+    fun `given existing artist by different term should get the artist and update it`() {
         val artist= LastFMArtist("name", "info", "artistUrl",  false)
         every { lastFMLocalStorage.getArtistByName("name") } returns null
         every { lastFMService.getArtist("name") } returns artist
@@ -66,7 +60,7 @@ class ArtistInfoRepositoryTest {
     }
 
     @Test
-    fun `given non existing song by term should return empty song`() {
+    fun `given non existing artist by term should return empty artist`() {
         every { lastFMLocalStorage.getArtistByName("name") } returns null
         every { lastFMService.getArtist("name") } returns null
 
@@ -76,7 +70,7 @@ class ArtistInfoRepositoryTest {
     }
 
     @Test
-    fun `given service exception should return empty song`() {
+    fun `given service exception should return empty artist`() {
         every { lastFMLocalStorage.getArtistByName("name") } returns null
         every { lastFMService.getArtist("name") } throws mockk<Exception>()
 

@@ -1,6 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.view
 
 import ayds.lisboa.songinfo.moredetails.model.entities.Artist
+import ayds.lisboa.songinfo.moredetails.model.entities.EmptyArtist
 import ayds.lisboa.songinfo.moredetails.model.entities.LastFMArtist
 import io.mockk.mockk
 import org.junit.Assert
@@ -49,15 +50,12 @@ class ArtistInfoFormatterTester {
 
     @Test
     fun `given a non lastFM artist it should return the artist not found description`() {
-        val artist: Artist = mockk()
+        val artist: Artist = EmptyArtist
 
         val result = artistInfoFormatter.getStringArtistInfo(artist)
 
-        val expected = ""
+        val expected = "<html><div width=400><font face=\"arial\"></font></div></html>"
 
         Assert.assertEquals(expected, result)
     }
-
-
-
 }

@@ -46,20 +46,6 @@ class ArtistInfoRepositoryTest {
     }
 
     @Test
-    fun `given existing artist by different term should get the artist and update it`() {
-        val artist= LastFMArtist("name", "info", "artistUrl",  false)
-        every { lastFMLocalStorage.getArtistByName("name") } returns null
-        every { lastFMService.getArtist("name") } returns artist
-
-
-        val result = artistRepository.getArtistByName("name")
-
-        assertEquals(artist, result)
-        assertFalse(artist.isLocallyStored)
-        verify { lastFMLocalStorage.saveArtist(artist) }
-    }
-
-    @Test
     fun `given non existing artist by term should return empty artist`() {
         every { lastFMLocalStorage.getArtistByName("name") } returns null
         every { lastFMService.getArtist("name") } returns null

@@ -5,6 +5,7 @@ import ayds.lisboa.songinfo.moredetails.model.entities.EmptyArtist
 import ayds.lisboa.songinfo.moredetails.model.entities.LastFMArtist
 import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLocalStorage
 import ayds.lisboa2.lastFM.LastFMService
+import ayds.lisboa2.lastFM.LastFMArtist as ServiceLastFMArtist
 
 interface ArtistInfoRepository{
 
@@ -23,10 +24,14 @@ internal class ArtistInfoRepositoryImpl(
             lastFMArtist != null -> markArtistAsLocal(lastFMArtist)
             else -> {
                 try {
-                    lastFMArtist = lastFMService.getArtist(name)
+                    val serviceLastFMArtist = lastFMService.getArtist(name)
 
-                    lastFMArtist?.let {
-                        lastFMLocalStorage.saveArtist(it)
+                    serviceLastFMArtist?.let {
+                        lastFMArtist = LastFMArtist(
+                            it.artistName,
+                            it.artistInfo,
+                            it.artistURL
+                        )
                     }
                 } catch (e: Exception) {
                     lastFMArtist = null

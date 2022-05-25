@@ -1,4 +1,4 @@
-package lastFM
+package ayds.lisboa2.lastFM
 
 import retrofit2.Call
 import retrofit2.http.GET

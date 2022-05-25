@@ -1,4 +1,4 @@
-package lastFM
+package ayds.lisboa2.lastFM
 
 data class LastFMArtist(
      val artistName: String,

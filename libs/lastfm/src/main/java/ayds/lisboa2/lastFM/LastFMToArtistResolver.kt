@@ -1,4 +1,4 @@
-package lastFM
+package ayds.lisboa2.lastFM
 
 import com.google.gson.Gson
 import com.google.gson.JsonElement

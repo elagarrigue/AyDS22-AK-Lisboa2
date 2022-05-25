@@ -8,7 +8,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "ayds.lisboa"
+        applicationId "lastfm.lisboa"
         minSdkVersion 16
         targetSdkVersion 32
         versionCode 1

@@ -6,5 +6,5 @@ data class Card (
     val infoURL: String,
     val source: String,
     val sourceLogoUrl: String,
-    val isLocallyStored: Boolean,
+    var isLocallyStored: Boolean,
 )

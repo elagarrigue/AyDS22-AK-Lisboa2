@@ -81,7 +81,7 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun initObserver() {
-        moreDetailsModel.artistObservable
+        moreDetailsModel.cardObservable
             .subscribe { value -> setArtistInfoInView(value) }
     }
 

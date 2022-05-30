@@ -5,7 +5,7 @@ import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModelInjector
 
 object MoreDetailsViewInjector {
 
-    val artistInfoFormatter: ArtistInfoFormatter = ArtistInfoFormatterImpl()
+    val cardFormatter: CardFormatter = CardFormatterImpl()
 
     fun init(moreDetailsView: MoreDetailsView) {
         MoreDetailsModelInjector.initMoreDetailsModel(moreDetailsView)

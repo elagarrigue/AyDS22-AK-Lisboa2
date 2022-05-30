@@ -1,6 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.view
 
-import ayds.lisboa.songinfo.moredetails.model.entities.Artist
+import ayds.lisboa.songinfo.moredetails.model.entities.Card
 import java.lang.StringBuilder
 
 private const val LOCAL_DATABASE_PREFIX = "[*]"
@@ -8,17 +8,17 @@ private const val HEADER = "<html><div width=400>"
 private const val FOOTER = "</font></div></html>"
 private const val FONT = "<font face=\"arial\">"
 
-interface ArtistInfoFormatter {
+interface CardFormatter {
 
-    fun getStringArtistInfo(artist: Artist) : String
+    fun getStringArtistInfo(artist: Card) : String
 }
 
-internal class ArtistInfoFormatterImpl: ArtistInfoFormatter{
+internal class CardFormatterImpl: CardFormatter{
 
-    override fun getStringArtistInfo(artist: Artist): String {
-        var artistInfo: String = addLineBreaks(artist.artistInfo)
-        artistInfo = textToHtml(artistInfo, artist.artistName)
-        artistInfo = addPrefix(artist.isLocallyStored, artistInfo)
+    override fun getStringArtistInfo(card: Card): String {
+        var artistInfo: String = addLineBreaks(card.description)
+        artistInfo = textToHtml(artistInfo, card.artistName)
+        artistInfo = addPrefix(card.isLocallyStored, artistInfo)
         return artistInfo
     }
 

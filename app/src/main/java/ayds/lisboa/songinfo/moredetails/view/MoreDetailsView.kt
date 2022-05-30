@@ -11,7 +11,7 @@ import android.widget.Button
 import android.widget.ImageView
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModel
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModelInjector
-import ayds.lisboa.songinfo.moredetails.model.entities.Artist
+import ayds.lisboa.songinfo.moredetails.model.entities.Card
 import ayds.lisboa.songinfo.utils.UtilsInjector
 import ayds.lisboa.songinfo.utils.navigation.NavigationUtils
 import ayds.observer.Observable
@@ -29,7 +29,7 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     private val onActionSubject = Subject<MoreDetailsUiEvent>()
     private lateinit var moreDetailsModel: MoreDetailsModel
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
-    private var artistInfoFormatter: ArtistInfoFormatter = MoreDetailsViewInjector.artistInfoFormatter
+    private var cardFormatter: CardFormatter = MoreDetailsViewInjector.cardFormatter
 
     private lateinit var textPaneArtistBio: TextView
     private lateinit var imageView: ImageView
@@ -85,14 +85,14 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
             .subscribe { value -> setArtistInfoInView(value) }
     }
 
-    private fun setArtistInfoInView(artist: Artist) {
-        updateArtistURLState(artist)
+    private fun setArtistInfoInView(card: Card) {
+        updateArtistURLState(card)
         setExternalServiceImg()
-        setArtistBioInTextPane(artist)
+        setArtistBioInTextPane(card)
     }
 
-    private fun updateArtistURLState(artist: Artist) {
-        uiState = uiState.copy(artistURL = artist.artistURL)
+    private fun updateArtistURLState(card: Card) {
+        uiState = uiState.copy(artistURL = card.infoURL)
     }
 
     private fun setExternalServiceImg() {
@@ -101,14 +101,14 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         }
     }
 
-    private fun setArtistBioInTextPane(artist: Artist) {
+    private fun setArtistBioInTextPane(artist: Card) {
         runOnUiThread {
             textPaneArtistBio.text = Html.fromHtml(getStringArtistInfoFromArtistInfoFormatter(artist))
         }
     }
 
-    private fun getStringArtistInfoFromArtistInfoFormatter(artist: Artist): String =
-        artistInfoFormatter.getStringArtistInfo(artist)
+    private fun getStringArtistInfoFromArtistInfoFormatter(artist: Card): String =
+        cardFormatter.getStringArtistInfo(artist)
 
     private fun notifySearchAction() {
         onActionSubject.notify(MoreDetailsUiEvent.Search)

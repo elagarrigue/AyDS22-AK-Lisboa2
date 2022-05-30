@@ -5,7 +5,6 @@ import ayds.lisboa.songinfo.moredetails.model.entities.EmptyArtist
 import ayds.lisboa.songinfo.moredetails.model.entities.LastFMArtist
 import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLocalStorage
 import ayds.lisboa2.lastFM.LastFMService
-import ayds.lisboa2.lastFM.LastFMArtist as ServiceLastFMArtist
 
 interface ArtistInfoRepository{
 

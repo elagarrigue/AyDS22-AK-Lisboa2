@@ -4,18 +4,18 @@ import retrofit2.Response
 
 interface LastFMService {
 
-    fun getArtist(name: String): LastFMArtist?
+    fun getCard(name: String): Card?
 
 }
 
-internal class LastFMServiceImpl(private val lastFMAPI: LastFMAPI, private val lastFMToArtistResolver: LastFMToArtistResolver): LastFMService {
+internal class LastFMServiceImpl(private val lastFMAPI: LastFMAPI, private val jsonToCardResolver: JsonToCardResolver): LastFMService {
 
-    override fun getArtist(name: String): LastFMArtist? {
-        val callResponse = getArtistFromService(name)
-        return lastFMToArtistResolver.getArtistFromExternalData(callResponse.body(), name)
+    override fun getCard(name: String): Card? {
+        val callResponse = getCardFromService(name)
+        return jsonToCardResolver.getCardFromExternalData(callResponse.body(), name)
     }
 
-    private fun getArtistFromService(name: String): Response<String?> {
+    private fun getCardFromService(name: String): Response<String?> {
         return lastFMAPI.getArtistInfo(name)?.execute() ?: throw Exception("Artist not found")
     }
 }

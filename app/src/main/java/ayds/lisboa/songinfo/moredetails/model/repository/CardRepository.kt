@@ -6,6 +6,8 @@ import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLoca
 
 import ayds.lisboa2.lastFM.LastFMService
 
+private const val LASTFM_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
+
 interface CardRepository{
 
     fun getCardByName(name: String): Card?
@@ -23,16 +25,15 @@ internal class CardRepositoryImpl(
             lastFMCard != null -> markArtistAsLocal(lastFMCard)
             else -> {
                 try {
-                    val serviceLastFMArtist = lastFMService.getCard(name)
+                    val serviceLastFMArtist = lastFMService.getArtist(name)
 
                     serviceLastFMArtist?.let {
                         lastFMCard = Card(
                             it.artistName,
                             it.description,
                             it.infoURL,
-                            it.source,
-                            it.sourceLogoUrl,
-                            it.isLocallyStored
+                            "LastFM",
+                            LASTFM_LOGO,
                         )
                     }
                 } catch (e: Exception) {

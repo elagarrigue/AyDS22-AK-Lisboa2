@@ -4,22 +4,20 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 
-interface JsonToCardResolver {
-    fun getCardFromExternalData(serviceData: String?, artistName: String): Card?
+interface JsonToArtistResolver {
+    fun getArtistFromExternalData(serviceData: String?, artistName: String): LastFMArtist?
 }
 
 private const val BIOGRAPHY = "bio"
 private const val CONTENT = "content"
 private const val ARTIST = "artist"
 private const val URL = "url"
-private const val SOURCE = "LastFM"
-private const val LASTFM_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
 
-internal class JsonToCardResolverImpl : JsonToCardResolver {
+internal class JsonToArtistResolverImpl : JsonToArtistResolver {
 
-    override fun getCardFromExternalData(serviceData: String?, artistName: String): Card? {
+    override fun getArtistFromExternalData(serviceData: String?, artistName: String): LastFMArtist? {
         return try {
-            createCard(artistName, getQueryArtistInfo(serviceData))
+            createArtist(artistName, getQueryArtistInfo(serviceData))
         }
         catch (e:Exception) {
             null
@@ -29,8 +27,8 @@ internal class JsonToCardResolverImpl : JsonToCardResolver {
     private fun getQueryArtistInfo(serviceData: String?) =
         Gson().fromJson(serviceData, JsonObject::class.java)
 
-    private fun createCard(artistName: String, queryArtistInfo: JsonObject): Card =
-        Card(artistName, getArtistBiography(queryArtistInfo).asString, getArtistBiographyURL(queryArtistInfo), SOURCE, LASTFM_LOGO, false)
+    private fun createArtist(artistName: String, queryArtistInfo: JsonObject): LastFMArtist =
+        LastFMArtist(artistName, getArtistBiography(queryArtistInfo).asString, getArtistBiographyURL(queryArtistInfo))
 
     private fun getArtistBiography(jobj: JsonObject): JsonElement =
         getArtist(jobj)[BIOGRAPHY].asJsonObject[CONTENT]

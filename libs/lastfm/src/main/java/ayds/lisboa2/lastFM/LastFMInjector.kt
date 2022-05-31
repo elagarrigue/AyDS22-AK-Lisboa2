@@ -8,8 +8,8 @@ private const val RETROFIT_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 object LastFMInjector {
 
     private val lastFMAPI: LastFMAPI = createRetrofit().create(LastFMAPI::class.java)
-    private val jsonToCardResolver : JsonToCardResolver = JsonToCardResolverImpl()
-    val lastFMService: LastFMService = LastFMServiceImpl(lastFMAPI, jsonToCardResolver)
+    private val jsonToArtistResolver : JsonToArtistResolver = JsonToArtistResolverImpl()
+    val lastFMService: LastFMService = LastFMServiceImpl(lastFMAPI, jsonToArtistResolver)
 
     private fun createRetrofit() =
         Retrofit.Builder()

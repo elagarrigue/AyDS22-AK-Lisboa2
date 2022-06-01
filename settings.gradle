@@ -3,3 +3,5 @@ include 'observer'
 rootProject.name = "AK Lisboa"
 include ':LastFM'
 project(':LastFM').projectDir = new File('libs/lastfm')
+include ':new-york-times-data'
+project(':new-york-times-data').projectDir = new File('libs/NewYorkTimesData')

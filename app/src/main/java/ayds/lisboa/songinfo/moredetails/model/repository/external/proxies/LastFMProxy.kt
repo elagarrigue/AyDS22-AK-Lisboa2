@@ -8,9 +8,9 @@ import ayds.lisboa2.lastFM.LastFMService
 
 internal class LastFMProxy (
     private val lastFMService: LastFMService
-): ProxyCard {
+): ServiceProxy {
 
-    override fun getCard(name: String): Card? {
+    override fun getInfo(name: String): Card? {
         var lastFMCard: Card? = null
 
         try {

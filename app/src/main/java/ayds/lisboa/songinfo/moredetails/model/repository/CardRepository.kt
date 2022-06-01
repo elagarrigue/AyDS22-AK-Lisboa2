@@ -2,7 +2,7 @@ package ayds.lisboa.songinfo.moredetails.model.repository
 
 
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
-import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLocalStorage
+import ayds.lisboa.songinfo.moredetails.model.repository.local.card.CardLocalStorage
 
 import ayds.lisboa2.lastFM.LastFMService
 
@@ -14,21 +14,21 @@ interface CardRepository{
 }
 
 internal class CardRepositoryImpl(
-    private val lastFMLocalStorage: LastFMLocalStorage,
+    private val cardLocalStorage: CardLocalStorage,
     private val lastFMService: LastFMService
 ): CardRepository {
 
     override fun getCardByName(name: String): Card?{
-        var lastFMCard = lastFMLocalStorage.getCardByName(name)
+        var card = cardLocalStorage.getCardByName(name)
 
         when {
-            lastFMCard != null -> markArtistAsLocal(lastFMCard)
+            card != null -> markArtistAsLocal(card)
             else -> {
                 try {
                     val serviceLastFMArtist = lastFMService.getArtist(name)
 
                     serviceLastFMArtist?.let {
-                        lastFMCard = Card(
+                        card = Card(
                             it.artistName,
                             it.description,
                             it.infoURL,
@@ -37,12 +37,12 @@ internal class CardRepositoryImpl(
                         )
                     }
                 } catch (e: Exception) {
-                    lastFMCard = null
+                    card = null
                 }
             }
         }
 
-        return lastFMCard
+        return card
     }
 
     private fun markArtistAsLocal(card: Card) {

@@ -1,4 +1,4 @@
-package ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.sqldb
+package ayds.lisboa.songinfo.moredetails.model.repository.local.card.sqldb
 
 const val DATABASE_NAME = "dictionary.db"
 const val ARTIST_COLUMN = "artist"

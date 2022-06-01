@@ -1,9 +1,9 @@
-package ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM
+package ayds.lisboa.songinfo.moredetails.model.repository.local.card
 
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
 
 
-interface LastFMLocalStorage {
+interface CardLocalStorage {
 
     fun getCardByName(name: String): Card?
 

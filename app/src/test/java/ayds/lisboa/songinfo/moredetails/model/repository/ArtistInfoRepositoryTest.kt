@@ -3,8 +3,7 @@ package ayds.lisboa.songinfo.moredetails.model.repository
 
 import ayds.lisboa.songinfo.moredetails.model.entities.EmptyArtist
 import ayds.lisboa.songinfo.moredetails.model.entities.LastFMArtist
-import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLocalStorage
-import ayds.lisboa2.lastFM.LastFMInjector.lastFMService
+import ayds.lisboa.songinfo.moredetails.model.repository.local.card.LastFMLocalStorage
 import ayds.lisboa2.lastFM.LastFMService
 import io.mockk.every
 import io.mockk.mockk

@@ -1,16 +1,16 @@
-package ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.sqldb
+package ayds.lisboa.songinfo.moredetails.model.repository.local.card.sqldb
 
 import android.database.sqlite.SQLiteOpenHelper
 import android.database.sqlite.SQLiteDatabase
 import android.content.ContentValues
 import android.content.Context
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
-import ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.LastFMLocalStorage
+import ayds.lisboa.songinfo.moredetails.model.repository.local.card.CardLocalStorage
 
-internal class LastFMLocalStorageImpl(
+internal class CardLocalStorageImpl(
     context: Context?,
-    private val cursorToLastFMCardMapper: CursorToLastFMCardMapper,
-) : LastFMLocalStorage, SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
+    private val cursorToCardMapper: CursorToCardMapper,
+) : CardLocalStorage, SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
    override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(createArtistTableQuery)
@@ -41,6 +41,6 @@ internal class LastFMLocalStorageImpl(
             null,
             "$ARTIST_COLUMN DESC"
         )
-        return cursorToLastFMCardMapper.map(cursor)
+        return cursorToCardMapper.map(cursor)
     }
 }

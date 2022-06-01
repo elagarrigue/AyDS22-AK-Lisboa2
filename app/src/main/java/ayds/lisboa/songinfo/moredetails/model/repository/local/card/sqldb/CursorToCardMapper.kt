@@ -1,15 +1,15 @@
-package ayds.lisboa.songinfo.moredetails.model.repository.local.lastFM.sqldb
+package ayds.lisboa.songinfo.moredetails.model.repository.local.card.sqldb
 
 import android.database.Cursor
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
 import java.sql.SQLException
 
-interface CursorToLastFMCardMapper {
+interface CursorToCardMapper {
 
     fun map(cursor: Cursor): Card?
 }
 
-internal class CursorToLastFMCardMapperImpl : CursorToLastFMCardMapper {
+internal class CursorToCardMapperImpl : CursorToCardMapper {
 
     override fun map(cursor: Cursor): Card? =
         try {

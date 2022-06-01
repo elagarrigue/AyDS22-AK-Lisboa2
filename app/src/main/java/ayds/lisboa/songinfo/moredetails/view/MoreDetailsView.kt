@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.ImageView
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModel
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModelInjector
+import ayds.lisboa.songinfo.moredetails.model.Source
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
 import ayds.lisboa.songinfo.utils.UtilsInjector
 import ayds.lisboa.songinfo.utils.navigation.NavigationUtils
@@ -33,6 +34,7 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     private lateinit var textPaneArtistBio: TextView
     private lateinit var imageView: ImageView
+    private lateinit var textPaneSource: TextView
     private lateinit var openUrlButton: Button
 
     override val uiEventObservable: Observable<MoreDetailsUiEvent> = onActionSubject
@@ -57,6 +59,7 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     private fun initViews() {
         textPaneArtistBio = findViewById(R.id.textPane2)
         imageView = findViewById<View>(R.id.imageView) as ImageView
+        textPaneSource = findViewById(R.id.textSource)
         openUrlButton = findViewById<View>(R.id.openUrlButton) as Button
     }
 
@@ -88,6 +91,7 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     private fun setArtistInfoInView(cards: List<Card>) {
         updateArtistURLState(cards)
         setExternalServiceImg()
+        setTextPaneSource(cards)
         setArtistBioInTextPane(cards)
     }
 
@@ -100,6 +104,19 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     private fun setExternalServiceImg() {
         runOnUiThread {
             Picasso.get().load(URL_IMAGE).into(imageView)
+        }
+    }
+
+    private fun setTextPaneSource(cards: List<Card>) {
+
+        if(cards.isNotEmpty()) {
+            val source =
+            when (cards.first().source) {
+                Source.LASTFM -> "LastFM"
+                Source.NEWYORKTIMES -> "The New York Times"
+                Source.WIKIPEDIA -> "Wikipedia"
+            }
+            textPaneSource.text = "Source: $source"
         }
     }
 

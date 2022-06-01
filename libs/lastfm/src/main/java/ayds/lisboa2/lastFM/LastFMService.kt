@@ -8,11 +8,11 @@ interface LastFMService {
 
 }
 
-internal class LastFMServiceImpl(private val lastFMAPI: LastFMAPI, private val jsonToCardResolver: JsonToArtistResolver): LastFMService {
+internal class LastFMServiceImpl(private val lastFMAPI: LastFMAPI, private val jsonToArtistResolver: JsonToArtistResolver): LastFMService {
 
     override fun getArtist(name: String): LastFMArtist? {
         val callResponse = getArtistInfoFromService(name)
-        return jsonToCardResolver.getArtistFromExternalData(callResponse.body(), name)
+        return jsonToArtistResolver.getArtistFromExternalData(callResponse.body(), name)
     }
 
     private fun getArtistInfoFromService(name: String): Response<String?> {

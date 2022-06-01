@@ -27,7 +27,7 @@ internal class CardLocalStorageImpl(
         values.put(ARTIST_COLUMN, artist.artistName)
         values.put(INFO_COLUMN, artist.description)
         values.put(URL_COLUMN, artist.infoURL)
-        values.put(SOURCE_COLUMN, artist.source)
+        values.put(SOURCE_COLUMN, artist.source.ordinal)
         return values
     }
 

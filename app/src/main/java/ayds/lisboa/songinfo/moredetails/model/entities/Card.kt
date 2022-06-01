@@ -1,10 +1,22 @@
 package ayds.lisboa.songinfo.moredetails.model.entities
 
-data class Card (
-    val artistName: String,
-    val description: String,
-    val infoURL: String,
-    val source: String,
-    val sourceLogoUrl: String,
-    var isLocallyStored: Boolean = false
-)
+import ayds.lisboa.songinfo.moredetails.model.Source
+
+
+interface Card {
+    val artistName: String
+    val description: String
+    val infoURL: String
+    val source: Source
+    val sourceLogoUrl: String
+    var isLocallyStored: Boolean
+}
+
+data class CardImpl (
+    override val artistName: String,
+    override val description: String,
+    override val infoURL: String,
+    override val source: Source,
+    override val sourceLogoUrl: String,
+    override var isLocallyStored: Boolean = false
+): Card

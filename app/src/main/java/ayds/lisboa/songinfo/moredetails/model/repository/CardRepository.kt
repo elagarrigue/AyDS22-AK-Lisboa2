@@ -1,7 +1,9 @@
 package ayds.lisboa.songinfo.moredetails.model.repository
 
 
+import ayds.lisboa.songinfo.moredetails.model.Source
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
+import ayds.lisboa.songinfo.moredetails.model.entities.CardImpl
 import ayds.lisboa.songinfo.moredetails.model.repository.local.card.CardLocalStorage
 
 import ayds.lisboa2.lastFM.LastFMService
@@ -28,11 +30,11 @@ internal class CardRepositoryImpl(
                     val serviceLastFMArtist = lastFMService.getArtist(name)
 
                     serviceLastFMArtist?.let {
-                        card = Card(
+                        card = CardImpl(
                             it.artistName,
                             it.description,
                             it.infoURL,
-                            "LastFM",
+                            Source.LASTFM,
                             LASTFM_LOGO,
                         )
                     }

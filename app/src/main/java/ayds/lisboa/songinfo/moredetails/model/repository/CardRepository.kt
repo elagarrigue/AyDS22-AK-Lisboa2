@@ -1,51 +1,44 @@
 package ayds.lisboa.songinfo.moredetails.model.repository
 
-
-import ayds.lisboa.songinfo.moredetails.model.Source
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
-import ayds.lisboa.songinfo.moredetails.model.entities.CardImpl
+import ayds.lisboa.songinfo.moredetails.model.repository.external.Broker
 import ayds.lisboa.songinfo.moredetails.model.repository.local.card.CardLocalStorage
-import ayds.lisboa2.lastFM.LASTFM_LOGO
-import ayds.lisboa2.lastFM.LastFMService
 
 interface CardRepository{
 
-    fun getCardByName(name: String): Card?
+    fun getArtistsInfo(name: String): List<Card>
 }
 
 internal class CardRepositoryImpl(
     private val cardLocalStorage: CardLocalStorage,
-    private val lastFMService: LastFMService
+    private val broker: Broker
 ): CardRepository {
 
-    override fun getCardByName(name: String): Card?{
-        var card = cardLocalStorage.getCardByName(name)
+    override fun getArtistsInfo(name: String): List<Card>{
+        var artistsCards: List<Card>? = null// cardLocalStorage.getCardByName(name)
 
         when {
-            card != null -> markArtistAsLocal(card)
+            artistsCards != null -> markCardsAsLocal(artistsCards)
             else -> {
-                try {
-                    val serviceLastFMArtist = lastFMService.getArtist(name)
-
-                    serviceLastFMArtist?.let {
-                        card = CardImpl(
-                            it.artistName,
-                            it.description,
-                            it.infoURL,
-                            Source.LASTFM,
-                            LASTFM_LOGO,
-                        )
-                    }
-                } catch (e: Exception) {
-                    card = null
-                }
+                artistsCards = broker.getCards(name)
+                saveCardsInDatabase(artistsCards)
             }
         }
 
-        return card
+        return artistsCards
     }
 
-    private fun markArtistAsLocal(card: Card) {
-        card.isLocallyStored = true
+    private fun markCardsAsLocal(cards: List<Card>) {
+        for(card in cards){
+            card.isLocallyStored = true
+        }
+    }
+
+    private fun saveCardsInDatabase(cards: List<Card>){
+        for(card in cards){
+            card?.let{
+                cardLocalStorage.saveCard(card)
+            }
+        }
     }
 }

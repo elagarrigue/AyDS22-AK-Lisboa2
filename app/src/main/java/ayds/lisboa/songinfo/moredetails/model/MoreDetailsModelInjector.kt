@@ -3,6 +3,10 @@ package ayds.lisboa.songinfo.moredetails.model
 import android.content.Context
 import ayds.lisboa.songinfo.moredetails.model.repository.CardRepository
 import ayds.lisboa.songinfo.moredetails.model.repository.CardRepositoryImpl
+import ayds.lisboa.songinfo.moredetails.model.repository.external.Broker
+import ayds.lisboa.songinfo.moredetails.model.repository.external.BrokerImpl
+import ayds.lisboa.songinfo.moredetails.model.repository.external.proxies.LastFMProxy
+import ayds.lisboa.songinfo.moredetails.model.repository.external.proxies.ProxyCard
 import ayds.lisboa.songinfo.moredetails.model.repository.local.card.CardLocalStorage
 import ayds.lisboa.songinfo.moredetails.model.repository.local.card.sqldb.CursorToCardMapperImpl
 import ayds.lisboa.songinfo.moredetails.model.repository.local.card.sqldb.CardLocalStorageImpl
@@ -20,10 +24,11 @@ object MoreDetailsModelInjector {
         val lastFMLocalStorage: CardLocalStorage = CardLocalStorageImpl(
             moreDetailsView as Context, CursorToCardMapperImpl()
         )
-        val lastFMService: LastFMService = LastFMInjector.lastFMService
+        val lastFMProxy = LastFMProxy(LastFMInjector.lastFMService)
+        val broker: Broker = BrokerImpl(lastFMProxy)
 
         val repository: CardRepository =
-            CardRepositoryImpl(lastFMLocalStorage, lastFMService)
+            CardRepositoryImpl(lastFMLocalStorage,broker)
 
         moreDetailsModel = MoreDetailsModelImpl(repository)
     }

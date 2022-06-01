@@ -6,7 +6,7 @@ import ayds.lisboa.songinfo.moredetails.model.repository.local.card.CardLocalSto
 
 interface CardRepository{
 
-    fun getArtistsInfo(name: String): List<Card>
+    fun getCardsByName(name: String): List<Card>
 }
 
 internal class CardRepositoryImpl(
@@ -14,7 +14,7 @@ internal class CardRepositoryImpl(
     private val broker: Broker
 ): CardRepository {
 
-    override fun getArtistsInfo(name: String): List<Card>{
+    override fun getCardsByName(name: String): List<Card>{
         var artistsCards: List<Card>? = null// cardLocalStorage.getCardByName(name)
 
         when {

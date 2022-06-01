@@ -85,14 +85,14 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
             .subscribe { value -> setArtistInfoInView(value) }
     }
 
-    private fun setArtistInfoInView(card: Card) {
-        updateArtistURLState(card)
+    private fun setArtistInfoInView(cards: List<Card>) {
+        updateArtistURLState(cards)
         setExternalServiceImg()
-        setArtistBioInTextPane(card)
+        setArtistBioInTextPane(cards)
     }
 
-    private fun updateArtistURLState(card: Card) {
-        uiState = uiState.copy(artistURL = card.infoURL)
+    private fun updateArtistURLState(cards: List<Card>) {
+        uiState = uiState.copy(artistURL = cards.first().infoURL)
     }
 
     private fun setExternalServiceImg() {
@@ -101,9 +101,9 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         }
     }
 
-    private fun setArtistBioInTextPane(artist: Card) {
+    private fun setArtistBioInTextPane(cards: List<Card>) {
         runOnUiThread {
-            textPaneArtistBio.text = Html.fromHtml(getStringArtistInfoFromArtistInfoFormatter(artist))
+            textPaneArtistBio.text = Html.fromHtml(getStringArtistInfoFromArtistInfoFormatter(cards.first()))
         }
     }
 

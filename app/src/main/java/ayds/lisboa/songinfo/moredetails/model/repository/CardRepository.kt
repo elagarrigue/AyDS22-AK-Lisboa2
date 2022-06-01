@@ -5,10 +5,8 @@ import ayds.lisboa.songinfo.moredetails.model.Source
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
 import ayds.lisboa.songinfo.moredetails.model.entities.CardImpl
 import ayds.lisboa.songinfo.moredetails.model.repository.local.card.CardLocalStorage
-
+import ayds.lisboa2.lastFM.LASTFM_LOGO
 import ayds.lisboa2.lastFM.LastFMService
-
-private const val LASTFM_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
 
 interface CardRepository{
 

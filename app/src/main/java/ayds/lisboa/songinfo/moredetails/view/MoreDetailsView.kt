@@ -92,7 +92,9 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun updateArtistURLState(cards: List<Card>) {
-        uiState = uiState.copy(artistURL = cards.first().infoURL)
+        if(cards.isNotEmpty()){
+            uiState = uiState.copy(artistURL = cards.first().infoURL)
+        }
     }
 
     private fun setExternalServiceImg() {
@@ -103,7 +105,9 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun setArtistBioInTextPane(cards: List<Card>) {
         runOnUiThread {
-            textPaneArtistBio.text = Html.fromHtml(getStringArtistInfoFromArtistInfoFormatter(cards.first()))
+            if(cards.isNotEmpty()){
+                textPaneArtistBio.text = Html.fromHtml(getStringArtistInfoFromArtistInfoFormatter(cards.first()))
+            }
         }
     }
 

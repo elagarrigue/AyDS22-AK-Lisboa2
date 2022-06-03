@@ -30,5 +30,4 @@ internal class NYTProxy (
 
         return nytCard
     }
-
 }

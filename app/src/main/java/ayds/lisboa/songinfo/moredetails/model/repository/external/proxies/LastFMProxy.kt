@@ -31,5 +31,4 @@ internal class LastFMProxy (
 
         return lastFMCard
     }
-
 }

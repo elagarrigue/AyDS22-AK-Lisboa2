@@ -13,6 +13,8 @@ import ayds.lisboa.songinfo.moredetails.model.repository.local.card.sqldb.CardLo
 import ayds.lisboa.songinfo.moredetails.view.MoreDetailsView
 import ayds.lisboa2.lastFM.LastFMInjector
 import ayds.ak1.newyorktimes.article.external.NYInjector
+import ayds.lisboa.songinfo.moredetails.model.repository.external.proxies.WikipediaProxy
+import ayds.winchester1.wikipedia.WikipediaInjector
 
 object MoreDetailsModelInjector {
 
@@ -27,6 +29,7 @@ object MoreDetailsModelInjector {
         val lastFMProxy = LastFMProxy(LastFMInjector.lastFMService)
         val nytProxy = NYTProxy(NYInjector.nyInfoService)
         val broker: Broker = BrokerImpl(lastFMProxy,nytProxy)
+        val wkpProxy = WikipediaProxy(WikipediaInjector.wikipediaCardService)
 
         val repository: CardRepository =
             CardRepositoryImpl(lastFMLocalStorage,broker)

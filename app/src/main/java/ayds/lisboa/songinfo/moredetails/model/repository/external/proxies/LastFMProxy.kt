@@ -3,6 +3,7 @@ package ayds.lisboa.songinfo.moredetails.model.repository.external.proxies
 import ayds.lisboa.songinfo.moredetails.model.Source
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
 import ayds.lisboa.songinfo.moredetails.model.entities.CardImpl
+import ayds.lisboa.songinfo.moredetails.model.entities.EmptyCard
 import ayds.lisboa2.lastFM.LASTFM_LOGO
 import ayds.lisboa2.lastFM.LastFMService
 
@@ -10,7 +11,7 @@ internal class LastFMProxy (
     private val lastFMService: LastFMService
 ): ServiceProxy {
 
-    override fun getInfo(name: String): Card? {
+    override fun getInfo(name: String): Card {
         var lastFMCard: Card? = null
 
         try {
@@ -29,6 +30,6 @@ internal class LastFMProxy (
             lastFMCard = null
         }
 
-        return lastFMCard
+        return lastFMCard ?: EmptyCard
     }
 }

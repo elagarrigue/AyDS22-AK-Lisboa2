@@ -13,12 +13,14 @@ import ayds.lisboa.songinfo.moredetails.model.repository.local.card.sqldb.CardLo
 import ayds.lisboa.songinfo.moredetails.view.MoreDetailsView
 import ayds.lisboa2.lastFM.LastFMInjector
 import ayds.ak1.newyorktimes.article.external.NYInjector
+import ayds.lisboa.songinfo.moredetails.model.repository.external.proxies.ServiceProxy
 import ayds.lisboa.songinfo.moredetails.model.repository.external.proxies.WikipediaProxy
 import ayds.winchester1.wikipedia.WikipediaInjector
 
 object MoreDetailsModelInjector {
 
     private lateinit var moreDetailsModel: MoreDetailsModel
+    var proxies: MutableList<ServiceProxy> = mutableListOf()
     
     fun getMoreDetailsModel(): MoreDetailsModel = moreDetailsModel
 
@@ -28,8 +30,13 @@ object MoreDetailsModelInjector {
         )
         val lastFMProxy = LastFMProxy(LastFMInjector.lastFMService)
         val nytProxy = NYTProxy(NYInjector.nyInfoService)
-        val broker: Broker = BrokerImpl(lastFMProxy,nytProxy)
         val wkpProxy = WikipediaProxy(WikipediaInjector.wikipediaCardService)
+
+        proxies.add(lastFMProxy)
+        proxies.add(nytProxy)
+        proxies.add(wkpProxy)
+
+        val broker: Broker = BrokerImpl(proxies)
 
         val repository: CardRepository =
             CardRepositoryImpl(lastFMLocalStorage,broker)

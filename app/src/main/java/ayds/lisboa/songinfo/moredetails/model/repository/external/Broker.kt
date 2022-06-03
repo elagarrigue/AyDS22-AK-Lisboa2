@@ -1,6 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.model.repository.external
 
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
+import ayds.lisboa.songinfo.moredetails.model.entities.CardImpl
 import ayds.lisboa.songinfo.moredetails.model.repository.external.proxies.ServiceProxy
 
 interface Broker {
@@ -8,27 +9,30 @@ interface Broker {
 }
 
 internal class BrokerImpl(
-    private val lastFMProxy: ServiceProxy,
-    private val nytProxy: ServiceProxy
+    private val proxies: List<ServiceProxy>
 ): Broker {
 
+    private lateinit var artistName: String
+    private var cards: MutableList<Card> = mutableListOf()
+
     override fun getCards(name: String): List<Card> {
-        var cardList: MutableList<Card> = mutableListOf()
+        this.artistName = name
+        getCardsFromProxies()
 
-        val lastFMCard = lastFMProxy.getInfo(name);
-        val nytCard = nytProxy.getInfo(name);
-
-        if(cardFound(lastFMCard)){
-            cardList.add(lastFMCard!!)
-        }
-        if(cardFound(nytCard)){
-            cardList.add(nytCard!!)
-        }
-
-        return cardList
+        return cards
     }
 
-    private fun cardFound(card: Card?): Boolean {
-        return card != null
+    private fun getCardsFromProxies() {
+        proxies.forEach {
+            makeCardsList(getProxysCard(it))
+        }
+    }
+
+    private fun getProxysCard(serviceProxy: ServiceProxy): Card = serviceProxy.getInfo(this.artistName)
+
+    private fun makeCardsList(card: Card) {
+        when (card) {
+            is CardImpl -> this.cards.add(card)
+        }
     }
 }

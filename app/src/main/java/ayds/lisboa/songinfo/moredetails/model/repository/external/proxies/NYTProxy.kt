@@ -4,12 +4,13 @@ import ayds.ak1.newyorktimes.article.external.NYInfoService
 import ayds.lisboa.songinfo.moredetails.model.Source
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
 import ayds.lisboa.songinfo.moredetails.model.entities.CardImpl
+import ayds.lisboa.songinfo.moredetails.model.entities.EmptyCard
 
 internal class NYTProxy (
     private val nytService: NYInfoService
 ): ServiceProxy {
 
-    override fun getInfo(name: String): Card? {
+    override fun getInfo(name: String): Card {
         var nytCard: Card? = null
 
         try {
@@ -28,6 +29,6 @@ internal class NYTProxy (
             nytCard = null
         }
 
-        return nytCard
+        return nytCard ?: EmptyCard
     }
 }

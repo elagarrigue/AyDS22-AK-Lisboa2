@@ -26,7 +26,9 @@ internal class MoreDetailsControllerImpl(
         Observer { value ->
             when (value) {
                 MoreDetailsUiEvent.Search -> searchCard()
-                is MoreDetailsUiEvent.OpenURL -> openURL()
+                MoreDetailsUiEvent.OpenLastFM -> openLastFM()
+                MoreDetailsUiEvent.OpenWikipedia -> openWikipedia()
+                MoreDetailsUiEvent.OpenNYT -> openNYT()
             }
         }
 
@@ -36,7 +38,15 @@ internal class MoreDetailsControllerImpl(
         }.start()
     }
 
-    private fun openURL() {
-        moreDetailsView.openExternalLink(moreDetailsView.uiState.artistURL)
+    private fun openLastFM() {
+        moreDetailsView.navigateToLastFMActivity()
+    }
+
+    private fun openWikipedia() {
+        moreDetailsView.navigateToWikipediaActivity()
+    }
+
+    private fun openNYT() {
+        moreDetailsView.navigateToNYTActivity()
     }
 }

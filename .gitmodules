@@ -4,3 +4,6 @@
 [submodule "libs/lastfm"]
 	path = libs/lastfm
 	url = https://github.com/brancomartinezc/LastFM-Lisboa2.git
+[submodule "libs/WikipediaData"]
+	path = libs/WikipediaData
+	url = https://github.com/MarianelaDiaz/AKWinchester-WikipediaData.git

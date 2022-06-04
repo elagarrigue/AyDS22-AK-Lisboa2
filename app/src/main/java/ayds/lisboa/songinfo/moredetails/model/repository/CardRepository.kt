@@ -15,10 +15,10 @@ internal class CardRepositoryImpl(
 ): CardRepository {
 
     override fun getCardsByName(name: String): List<Card>{
-        var artistsCards: List<Card>? = null// cardLocalStorage.getCardByName(name)
+        var artistsCards: List<Card> = cardLocalStorage.getCardsByName(name)
 
         when {
-            artistsCards != null -> markCardsAsLocal(artistsCards)
+            artistsCards.isNotEmpty() -> markCardsAsLocal(artistsCards)
             else -> {
                 artistsCards = broker.getCards(name)
                 saveCardsInDatabase(artistsCards)

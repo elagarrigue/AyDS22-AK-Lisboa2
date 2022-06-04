@@ -5,7 +5,7 @@ import ayds.lisboa.songinfo.moredetails.model.entities.Card
 
 interface CardLocalStorage {
 
-    fun getCardByName(name: String): Card?
+    fun getCardsByName(name: String): List<Card>
 
     fun saveCard(card: Card)
 }

@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.content.ContentValues
 import android.content.Context
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
+import ayds.lisboa.songinfo.moredetails.model.repository.external.proxies.ServiceProxy
 import ayds.lisboa.songinfo.moredetails.model.repository.local.card.CardLocalStorage
 
 internal class CardLocalStorageImpl(
@@ -31,7 +32,7 @@ internal class CardLocalStorageImpl(
         return values
     }
 
-    override fun getCardByName(name: String): Card? {
+    override fun getCardsByName(name: String): List<Card> {
         val cursor = this.readableDatabase.query(
             CARD_TABLE_NAME,
             arrayOf(ID_COLUMN, ARTIST_COLUMN, INFO_COLUMN, URL_COLUMN, SOURCE_COLUMN),
@@ -43,4 +44,6 @@ internal class CardLocalStorageImpl(
         )
         return cursorToCardMapper.map(cursor)
     }
+
+
 }

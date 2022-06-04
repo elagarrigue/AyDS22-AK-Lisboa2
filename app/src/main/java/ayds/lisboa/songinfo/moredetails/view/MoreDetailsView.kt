@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModel
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModelInjector
+import ayds.lisboa.songinfo.moredetails.model.Source
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
 import ayds.lisboa.songinfo.utils.UtilsInjector
 import ayds.lisboa.songinfo.utils.navigation.NavigationUtils
@@ -33,6 +34,7 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     private lateinit var moreDetailsModel: MoreDetailsModel
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
+    private var cardFormatter: CardFormatter = MoreDetailsViewInjector.cardFormatter
 
     private lateinit var textView: TextView
     private lateinit var lastFMButton: Button
@@ -46,16 +48,16 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     override fun navigateToLastFMActivity() {
         val card = getLastFMCard()
-        openCardActivity(card)
+        openCardActivity(card!!)
     }
 
     override fun navigateToWikipediaActivity() {
         val card = getWikipediaCard()
-        openCardActivity(card)
+        openCardActivity(card!!)
     }
     override fun navigateToNYTActivity() {
         val card = getNYTCard()
-        openCardActivity(card)
+        openCardActivity(card!!)
     }
 
     private fun openCardActivity(card: Card) {
@@ -68,11 +70,35 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     //CAMBIAR PARA QUE BUSQUE EN LA LISTA DE CARDS
-    private fun getLastFMCard() : Card = cards.first()
+    private fun getLastFMCard() : Card? {
+        var lastFMCard : Card? = null
+        cards.forEach {
+            if (it.source == Source.LASTFM) {
+                lastFMCard = it
+            }
+        }
+        return lastFMCard
+    }
 
-    private fun getWikipediaCard() : Card = cards.first()
+    private fun getWikipediaCard() : Card? {
+        var wikipediaCard : Card? = null
+        cards.forEach {
+            if (it.source == Source.WIKIPEDIA) {
+                wikipediaCard = it
+            }
+        }
+        return wikipediaCard
+    }
 
-    private fun getNYTCard() : Card = cards.first()
+    private fun getNYTCard() : Card? {
+        var NYTCard : Card? = null
+        cards.forEach {
+            if (it.source == Source.NEWYORKTIMES) {
+                NYTCard = it
+            }
+        }
+        return NYTCard
+    }
 
     override fun openExternalLink(url: String) {
         navigationUtils.openExternalUrl(this, url)

@@ -21,7 +21,7 @@ internal class WikipediaProxy (
                     name,
                     artistInfoCard.description,
                     artistInfoCard.infoURL,
-                    Source.LASTFM,
+                    Source.WIKIPEDIA,
                     artistInfoCard.sourceLogoURL,
                 )
             }

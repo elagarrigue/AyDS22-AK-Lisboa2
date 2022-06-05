@@ -19,10 +19,10 @@
 
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_width="410dp"
-        android:layout_height="259dp"
+        android:layout_width="401dp"
+        android:layout_height="161dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="104dp"
+        android:layout_marginTop="72dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -48,12 +48,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scrollView"
-        app:layout_constraintVertical_bias="0.576" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/textSource"
-        android:layout_width="408dp"
-        android:layout_height="49dp"
+        android:layout_width="340dp"
+        android:layout_height="43dp"
         app:layout_constraintBottom_toTopOf="@+id/scrollView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -62,12 +62,11 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         val intent = Intent(this, CardActivity::class.java)
         intent.putExtra(CardActivity.DESCRIPTION_EXTRA, card.description)
         intent.putExtra(CardActivity.INFO_URL_EXTRA, card.infoURL)
-        intent.putExtra(CardActivity.SOURCE_EXTRA, card.source)
+        intent.putExtra(CardActivity.SOURCE_EXTRA, card.source.toString())
         intent.putExtra(CardActivity.SOURCE_LOGO_EXTRA, card.sourceLogoUrl)
         startActivity(intent)
     }
 
-    //CAMBIAR PARA QUE BUSQUE EN LA LISTA DE CARDS
     private fun getLastFMCard() : Card {
         return cards.firstOrNull{it.source == Source.LASTFM} ?: EmptyCard
     }
@@ -139,11 +138,6 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun initCards(cards: List<Card>) {
-        println("================")
-        println("================")
-        println("CARDS")
-        println("================")
-        println("================")
         this.cards = cards
     }
 

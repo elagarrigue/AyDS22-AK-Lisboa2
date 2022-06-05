@@ -11,6 +11,7 @@ import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModel
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModelInjector
 import ayds.lisboa.songinfo.moredetails.model.Source
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
+import ayds.lisboa.songinfo.moredetails.model.entities.EmptyCard
 import ayds.lisboa.songinfo.utils.UtilsInjector
 import ayds.lisboa.songinfo.utils.navigation.NavigationUtils
 import ayds.observer.Observable
@@ -47,17 +48,14 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     override lateinit var cards: List<Card>
 
     override fun navigateToLastFMActivity() {
-        val card = getLastFMCard()
-        openCardActivity(card!!)
+        openCardActivity(getLastFMCard())
     }
 
     override fun navigateToWikipediaActivity() {
-        val card = getWikipediaCard()
-        openCardActivity(card!!)
+        openCardActivity(getWikipediaCard())
     }
     override fun navigateToNYTActivity() {
-        val card = getNYTCard()
-        openCardActivity(card!!)
+        openCardActivity(getNYTCard())
     }
 
     private fun openCardActivity(card: Card) {
@@ -70,34 +68,16 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     //CAMBIAR PARA QUE BUSQUE EN LA LISTA DE CARDS
-    private fun getLastFMCard() : Card? {
-        var lastFMCard : Card? = null
-        cards.forEach {
-            if (it.source == Source.LASTFM) {
-                lastFMCard = it
-            }
-        }
-        return lastFMCard
+    private fun getLastFMCard() : Card {
+        return cards.firstOrNull{it.source == Source.LASTFM} ?: EmptyCard
     }
 
-    private fun getWikipediaCard() : Card? {
-        var wikipediaCard : Card? = null
-        cards.forEach {
-            if (it.source == Source.WIKIPEDIA) {
-                wikipediaCard = it
-            }
-        }
-        return wikipediaCard
+    private fun getWikipediaCard() : Card {
+        return cards.firstOrNull{it.source == Source.WIKIPEDIA} ?: EmptyCard
     }
 
-    private fun getNYTCard() : Card? {
-        var NYTCard : Card? = null
-        cards.forEach {
-            if (it.source == Source.NEWYORKTIMES) {
-                NYTCard = it
-            }
-        }
-        return NYTCard
+    private fun getNYTCard() : Card {
+        return cards.firstOrNull{it.source == Source.NEWYORKTIMES} ?: EmptyCard
     }
 
     override fun openExternalLink(url: String) {
@@ -155,10 +135,15 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun initObserver() {
         moreDetailsModel.cardObservable
-            .subscribe { value -> initCardS(value) }
+            .subscribe { value -> initCards(value) }
     }
 
-    private fun initCardS(cards: List<Card>) {
+    private fun initCards(cards: List<Card>) {
+        println("================")
+        println("================")
+        println("CARDS")
+        println("================")
+        println("================")
         this.cards = cards
     }
 

@@ -11,6 +11,8 @@ import ayds.lisboa.songinfo.utils.UtilsInjector
 import ayds.lisboa.songinfo.utils.navigation.NavigationUtils
 import com.squareup.picasso.Picasso
 
+private const val LOCAL_DATABASE_PREFIX = "[*]"
+
 class CardActivity : AppCompatActivity() {
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
@@ -47,9 +49,23 @@ class CardActivity : AppCompatActivity() {
     }
 
     private fun updateViews() {
-        textPaneArtistBio.text = intent.getStringExtra(DESCRIPTION_EXTRA)?:""
-        val source = "Source: ${intent.getStringExtra(SOURCE_EXTRA)?:""}"
-        textPaneSource.text = source
+        textPaneArtistBio.text = getDescription()
+        textPaneSource.text = getSource()
+        setImage()
+    }
+
+    private fun getDescription() : String {
+        var description = intent.getStringExtra(DESCRIPTION_EXTRA)?:""
+        if (intent.getBooleanExtra(IS_LOCALLY_STORED_EXTRA,false)) {
+            description = "$LOCAL_DATABASE_PREFIX $description"
+        }
+        return description
+    }
+
+    private fun getSource() : String =
+        "Source: ${intent.getStringExtra(SOURCE_EXTRA)?:""}"
+
+    private fun setImage() {
         Picasso.get().load(intent.getStringExtra(SOURCE_LOGO_EXTRA)?:"").into(imageView)
     }
 
@@ -59,6 +75,7 @@ class CardActivity : AppCompatActivity() {
         const val SOURCE_EXTRA = "source"
         const val INFO_URL_EXTRA = "info_url"
         const val SOURCE_LOGO_EXTRA = "source_logo"
+        const val IS_LOCALLY_STORED_EXTRA = "is_Locally_Stored_logo"
 
     }
 }

@@ -21,12 +21,11 @@ interface MoreDetailsView {
     val uiEventObservable: Observable<MoreDetailsUiEvent>
     val uiState: MoreDetailsUiState
     val cards: List<Card>
+    val cardHandler: CardHandler
 
     fun openExternalLink(url: String)
 
-    fun navigateToLastFMActivity()
-    fun navigateToWikipediaActivity()
-    fun navigateToNYTActivity()
+    fun openCardActivity(card: Card)
 }
 
 internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
@@ -44,40 +43,22 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     override val uiEventObservable: Observable<MoreDetailsUiEvent> = onActionSubject
     override var uiState: MoreDetailsUiState = MoreDetailsUiState()
-
     override lateinit var cards: List<Card>
+    override  lateinit var cardHandler : CardHandler
 
-    override fun navigateToLastFMActivity() {
-        openCardActivity(getLastFMCard())
-    }
 
-    override fun navigateToWikipediaActivity() {
-        openCardActivity(getWikipediaCard())
-    }
-    override fun navigateToNYTActivity() {
-        openCardActivity(getNYTCard())
-    }
 
-    private fun openCardActivity(card: Card) {
+    override fun openCardActivity(card: Card) {
         val intent = Intent(this, CardActivity::class.java)
         intent.putExtra(CardActivity.DESCRIPTION_EXTRA, card.description)
         intent.putExtra(CardActivity.INFO_URL_EXTRA, card.infoURL)
         intent.putExtra(CardActivity.SOURCE_EXTRA, card.source.toString())
         intent.putExtra(CardActivity.SOURCE_LOGO_EXTRA, card.sourceLogoUrl)
+        intent.putExtra(CardActivity.IS_LOCALLY_STORED_EXTRA, card.isLocallyStored)
         startActivity(intent)
     }
 
-    private fun getLastFMCard() : Card {
-        return cards.firstOrNull{it.source == Source.LASTFM} ?: EmptyCard
-    }
 
-    private fun getWikipediaCard() : Card {
-        return cards.firstOrNull{it.source == Source.WIKIPEDIA} ?: EmptyCard
-    }
-
-    private fun getNYTCard() : Card {
-        return cards.firstOrNull{it.source == Source.NEWYORKTIMES} ?: EmptyCard
-    }
 
     override fun openExternalLink(url: String) {
         navigationUtils.openExternalUrl(this, url)
@@ -134,15 +115,13 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun initObserver() {
         moreDetailsModel.cardObservable
-            .subscribe { value -> initCards(value) }
+            .subscribe { value -> initProperties(value) }
     }
 
-    private fun initCards(cards: List<Card>) {
+    private fun initProperties(cards: List<Card>) {
         this.cards = cards
+        cardHandler = CardHandlerImpl(this, cards)
     }
-
-    /*private fun getStringArtistInfoFromArtistInfoFormatter(artist: Card): String =
-        cardFormatter.getStringArtistInfo(artist)*/
 
     private fun notifySearchAction() {
         onActionSubject.notify(MoreDetailsUiEvent.Search)

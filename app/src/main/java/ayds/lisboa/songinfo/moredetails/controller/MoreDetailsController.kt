@@ -39,14 +39,14 @@ internal class MoreDetailsControllerImpl(
     }
 
     private fun openLastFM() {
-        moreDetailsView.navigateToLastFMActivity()
+        moreDetailsView.cardHandler.navigateToLastFMActivity()
     }
 
     private fun openWikipedia() {
-        moreDetailsView.navigateToWikipediaActivity()
+        moreDetailsView.cardHandler.navigateToWikipediaActivity()
     }
 
     private fun openNYT() {
-        moreDetailsView.navigateToNYTActivity()
+        moreDetailsView.cardHandler.navigateToNYTActivity()
     }
 }

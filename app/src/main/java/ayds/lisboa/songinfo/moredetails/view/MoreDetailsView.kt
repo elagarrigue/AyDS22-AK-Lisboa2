@@ -150,7 +150,7 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         for(i in cards.indices) {
             when (cards[i]) {
                 is CardImpl -> uiState.actionsEnabled[i] = true
-                EmptyCard -> uiState.actionsEnabled[i] = false
+                is EmptyCard -> uiState.actionsEnabled[i] = false
             }
             if(cards[i].description.isEmpty())
                 uiState.actionsEnabled[i] = false

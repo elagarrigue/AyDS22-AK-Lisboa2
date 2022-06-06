@@ -21,8 +21,6 @@ import ayds.observer.Subject
 interface MoreDetailsView {
     val uiEventObservable: Observable<MoreDetailsUiEvent>
     val uiState: MoreDetailsUiState
-    val cards: List<Card>
-    val cardHandler: CardHandler
 
     fun openExternalLink(url: String)
 
@@ -35,7 +33,7 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     private lateinit var moreDetailsModel: MoreDetailsModel
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
-    private var cardFormatter: CardFormatter = MoreDetailsViewInjector.cardFormatter
+    //private var cardFormatter: CardFormatter = MoreDetailsViewInjector.cardFormatter
 
     private lateinit var textView: TextView
     private lateinit var lastFMButton: Button
@@ -44,10 +42,6 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     override val uiEventObservable: Observable<MoreDetailsUiEvent> = onActionSubject
     override var uiState: MoreDetailsUiState = MoreDetailsUiState()
-    override lateinit var cards: List<Card>
-    override  lateinit var cardHandler : CardHandler
-
-
 
     override fun openCardActivity(card: Card) {
         val intent = Intent(this, CardActivity::class.java)
@@ -58,8 +52,6 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         intent.putExtra(CardActivity.IS_LOCALLY_STORED_EXTRA, card.isLocallyStored)
         startActivity(intent)
     }
-
-
 
     override fun openExternalLink(url: String) {
         navigationUtils.openExternalUrl(this, url)
@@ -75,8 +67,6 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         initListener()
         initObserver()
         notifySearchAction()
-
-
     }
 
     private fun initViews() {
@@ -107,18 +97,6 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         NYTButton.setOnClickListener { notifyNYTAction() }
     }
 
-    private fun getLastFMCard() : Card {
-        return cards.firstOrNull{it.source == Source.LASTFM} ?: EmptyCard
-    }
-
-    private fun getWikipediaCard() : Card {
-        return cards.firstOrNull{it.source == Source.WIKIPEDIA} ?: EmptyCard
-    }
-
-    private fun getNYTCard() : Card {
-        return cards.firstOrNull{it.source == Source.NEWYORKTIMES} ?: EmptyCard
-    }
-
     private fun notifyLastFMAction() {
         uiState.cardActual = getLastFMCard()
         onActionSubject.notify(MoreDetailsUiEvent.OpenSource)
@@ -134,25 +112,37 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         onActionSubject.notify(MoreDetailsUiEvent.OpenSource)
     }
 
+
+    private fun getLastFMCard() : Card {
+        return uiState.cards.firstOrNull{it.source == Source.LASTFM} ?: EmptyCard
+    }
+
+    private fun getWikipediaCard() : Card {
+        return uiState.cards.firstOrNull{it.source == Source.WIKIPEDIA} ?: EmptyCard
+    }
+
+    private fun getNYTCard() : Card {
+        return uiState.cards.firstOrNull{it.source == Source.NEWYORKTIMES} ?: EmptyCard
+    }
+
     private fun initObserver() {
         moreDetailsModel.cardObservable
             .subscribe { value -> initProperties(value) }
     }
 
     private fun initProperties(cards: List<Card>) {
-        this.cards = cards
-       // cardHandler = CardHandlerImpl(this, cards)
+        uiState.cards = cards
         updateButtonsStates()
         setButtonsEnable()
     }
 
     private fun updateButtonsStates(){
-        for(i in cards.indices) {
-            when (cards[i]) {
+        for(i in uiState.cards.indices) {
+            when (uiState.cards[i]) {
                 is CardImpl -> uiState.actionsEnabled[i] = true
                 is EmptyCard -> uiState.actionsEnabled[i] = false
             }
-            if(cards[i].description.isEmpty())
+            if(uiState.cards[i].description.isEmpty())
                 uiState.actionsEnabled[i] = false
         }
     }

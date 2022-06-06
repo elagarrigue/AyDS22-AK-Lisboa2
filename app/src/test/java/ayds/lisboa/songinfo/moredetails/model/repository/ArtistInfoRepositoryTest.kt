@@ -1,10 +1,10 @@
 package ayds.lisboa.songinfo.moredetails.model.repository
 
-
-import ayds.lisboa.songinfo.moredetails.model.entities.EmptyArtist
-import ayds.lisboa.songinfo.moredetails.model.entities.LastFMArtist
-import ayds.lisboa.songinfo.moredetails.model.repository.local.card.LastFMLocalStorage
-import ayds.lisboa2.lastFM.LastFMService
+import ayds.lisboa.songinfo.moredetails.model.Source
+import ayds.lisboa.songinfo.moredetails.model.entities.Card
+import ayds.lisboa.songinfo.moredetails.model.entities.CardImpl
+import ayds.lisboa.songinfo.moredetails.model.repository.external.Broker
+import ayds.lisboa.songinfo.moredetails.model.repository.local.card.CardLocalStorage
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -14,54 +14,88 @@ import java.lang.Exception
 
 class ArtistInfoRepositoryTest {
 
-    private val lastFMLocalStorage: LastFMLocalStorage = mockk(relaxUnitFun = true)
-    private val lastFMService: LastFMService = mockk(relaxUnitFun = true)
+    private val cardLocalStorage: CardLocalStorage = mockk(relaxUnitFun = true)
+    private val broker: Broker = mockk(relaxUnitFun = true)
 
-    private val artistRepository: ArtistInfoRepository by lazy {
-        ArtistInfoRepositoryImpl(lastFMLocalStorage, lastFMService)
+    private val cardLastFM = CardImpl(
+        "name",
+        "description",
+        "url",
+        Source.LASTFM,
+        "logoUrl",
+        false
+    )
+    private val cardNYT = CardImpl(
+        "name",
+        "description",
+        "url",
+        Source.NEWYORKTIMES,
+        "logoUrl",
+        false
+    )
+    private val cardWkp = CardImpl(
+        "name",
+        "description",
+        "url",
+        Source.WIKIPEDIA,
+        "logoUrl",
+        false
+    )
+
+    private val cardRepository: CardRepository by lazy {
+        CardRepositoryImpl(cardLocalStorage, broker)
     }
 
     @Test
-    fun `given existing artist by term should return artist and mark it as local`() {
-        val artist = LastFMArtist("name", "info", "artistURL", false)
-        every { lastFMLocalStorage.getArtistByName("name") } returns artist
+    fun `given existing artist by name should return artist and mark it as local`() {
+        var cards: List<Card> = mutableListOf(cardLastFM,cardNYT,cardWkp)
+        every { cardLocalStorage.getCardsByName("name") } returns cards
 
-        val result = artistRepository.getArtistByName("name")
+        val result = cardRepository.getCardsByName("name")
 
-        assertEquals(artist, result)
-        assertTrue(artist.isLocallyStored)
+        assertEquals(cards, result)
+        for (card in cards) {
+            assertTrue(card.isLocallyStored)
+        }
     }
 
     @Test
     fun `given non existing artist by name should get the artist and store it`() {
-        val artist= LastFMArtist("name", "info", "artistUrl",  false)
-        every { lastFMLocalStorage.getArtistByName("name") } returns null
-        every { lastFMService.getArtist("name") } returns artist
+        var cards: List<Card> = mutableListOf(cardLastFM,cardNYT,cardWkp)
+        every { cardLocalStorage.getCardsByName("name") } returns emptyList()
+        every { broker.getCards("name") } returns cards
 
-        val result = artistRepository.getArtistByName("name")
+        val result = cardRepository.getCardsByName("name")
 
-        assertEquals(artist, result)
-        assertFalse(artist.isLocallyStored)
-        verify { lastFMLocalStorage.saveArtist(artist)}
+        assertEquals(cards, result)
+
+        for (card in cards) {
+            assertFalse(card.isLocallyStored)
+        }
+        for (card in cards) {
+            verify { cardLocalStorage.saveCard(card) }
+        }
     }
 
     @Test
-    fun `given non existing artist by term should return empty artist`() {
-        every { lastFMLocalStorage.getArtistByName("name") } returns null
-        every { lastFMService.getArtist("name") } returns null
+    fun `given non existing artist by name should return empty list`() {
+        every { cardLocalStorage.getCardsByName("name") } returns emptyList()
+        every { broker.getCards("name") } returns emptyList()
 
-        val result = artistRepository.getArtistByName("name")
+        val result = cardRepository.getCardsByName("name")
+        val emptyList: List<Card> = mutableListOf()
 
-        assertEquals(EmptyArtist, result)
+        assertEquals(emptyList, result)
     }
 
     @Test
     fun `given service exception should return empty artist`() {
-        every { lastFMLocalStorage.getArtistByName("name") } returns null
-        every { lastFMService.getArtist("name") } throws mockk<Exception>()
+        every { cardLocalStorage.getCardsByName("name") } returns emptyList()
+        every { broker.getCards("name") } throws mockk<Exception>()
 
-        val result = artistRepository.getArtistByName("name")
+        val result = cardRepository.getCardsByName("name")
+        val emptyList: List<Card> = mutableListOf()
 
-        assertEquals(EmptyArtist, result)
+        assertEquals(emptyList, result)
     }
 }

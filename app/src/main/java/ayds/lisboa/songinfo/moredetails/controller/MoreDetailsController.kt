@@ -16,7 +16,7 @@ internal class MoreDetailsControllerImpl(
 ) : MoreDetailsController {
 
     private lateinit var moreDetailsView: MoreDetailsView
-    private var cargando = false
+    private var searching = false
 
     override fun setMoreDetailsView(moreDetailsView: MoreDetailsView) {
         this.moreDetailsView = moreDetailsView
@@ -35,24 +35,24 @@ internal class MoreDetailsControllerImpl(
 
     override fun searchCard() {
         Thread {
-            cargando=true
+            searching=true
             moreDetailsModel.searchCard(moreDetailsView.uiState.artistName)
-            cargando=false
+            searching=false
         }.start()
     }
 
     private fun openLastFM() {
-        if(!cargando)
+        if(!searching)
             moreDetailsView.cardHandler.navigateToLastFMActivity()
     }
 
     private fun openWikipedia() {
-        if(!cargando)
+        if(!searching)
             moreDetailsView.cardHandler.navigateToWikipediaActivity()
     }
 
     private fun openNYT() {
-        if(!cargando)
+        if(!searching)
             moreDetailsView.cardHandler.navigateToNYTActivity()
     }
 }

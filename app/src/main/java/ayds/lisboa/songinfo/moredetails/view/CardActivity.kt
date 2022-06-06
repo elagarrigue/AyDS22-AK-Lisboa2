@@ -56,7 +56,7 @@ class CardActivity : AppCompatActivity() {
 
     private fun getDescription() : String {
         var description = intent.getStringExtra(DESCRIPTION_EXTRA)?:""
-        if (intent.getBooleanExtra(IS_LOCALLY_STORED_EXTRA,true)) {
+        if (intent.getBooleanExtra(IS_LOCALLY_STORED_EXTRA,false)) {
             description = "$LOCAL_DATABASE_PREFIX $description"
         }
         return description

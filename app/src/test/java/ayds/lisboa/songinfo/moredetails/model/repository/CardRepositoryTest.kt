@@ -12,7 +12,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import java.lang.Exception
 
-class ArtistInfoRepositoryTest {
+class CardRepositoryTest {
 
     private val cardLocalStorage: CardLocalStorage = mockk(relaxUnitFun = true)
     private val broker: Broker = mockk(relaxUnitFun = true)
@@ -88,14 +88,4 @@ class ArtistInfoRepositoryTest {
         assertEquals(emptyList, result)
     }
 
-    @Test
-    fun `given service exception should return empty artist`() {
-        every { cardLocalStorage.getCardsByName("name") } returns emptyList()
-        every { broker.getCards("name") } throws mockk<Exception>()
-
-        val result = cardRepository.getCardsByName("name")
-        val emptyList: List<Card> = mutableListOf()
-
-        assertEquals(emptyList, result)
-    }
 }

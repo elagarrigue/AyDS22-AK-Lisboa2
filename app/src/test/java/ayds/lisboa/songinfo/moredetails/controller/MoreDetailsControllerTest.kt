@@ -36,15 +36,6 @@ class MoreDetailsControllerTest {
 
         onActionSubject.notify(MoreDetailsUiEvent.Search)
 
-        verify { moreDetailsModel.searchArtist("artistName") }
-    }
-
-    @Test
-    fun `on open artist url event should open external link`() {
-        every { moreDetailsView.uiState } returns MoreDetailsUiState(artistURL = "artistURL")
-
-        onActionSubject.notify(MoreDetailsUiEvent.OpenURL)
-
-        verify { moreDetailsView.openExternalLink("artistURL") }
+        verify { moreDetailsModel.searchCard("artistName") }
     }
 }

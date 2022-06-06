@@ -27,9 +27,7 @@ internal class MoreDetailsControllerImpl(
         Observer { value ->
             when (value) {
                 MoreDetailsUiEvent.Search -> searchCard()
-                MoreDetailsUiEvent.OpenLastFM -> openLastFM()
-                MoreDetailsUiEvent.OpenWikipedia -> openWikipedia()
-                MoreDetailsUiEvent.OpenNYT -> openNYT()
+                MoreDetailsUiEvent.OpenSource -> openSource()
             }
         }
 
@@ -39,15 +37,7 @@ internal class MoreDetailsControllerImpl(
         }.start()
     }
 
-    private fun openLastFM() {
-        moreDetailsView.cardHandler.navigateToLastFMActivity()
-    }
-
-    private fun openWikipedia() {
-        moreDetailsView.cardHandler.navigateToWikipediaActivity()
-    }
-
-    private fun openNYT() {
-        moreDetailsView.cardHandler.navigateToNYTActivity()
+    private fun openSource() {
+        moreDetailsView.openCardActivity(moreDetailsView.uiState.cardActual!!)
     }
 }

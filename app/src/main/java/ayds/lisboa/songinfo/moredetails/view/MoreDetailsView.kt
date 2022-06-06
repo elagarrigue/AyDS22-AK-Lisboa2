@@ -107,16 +107,31 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         NYTButton.setOnClickListener { notifyNYTAction() }
     }
 
+    private fun getLastFMCard() : Card {
+        return cards.firstOrNull{it.source == Source.LASTFM} ?: EmptyCard
+    }
+
+    private fun getWikipediaCard() : Card {
+        return cards.firstOrNull{it.source == Source.WIKIPEDIA} ?: EmptyCard
+    }
+
+    private fun getNYTCard() : Card {
+        return cards.firstOrNull{it.source == Source.NEWYORKTIMES} ?: EmptyCard
+    }
+
     private fun notifyLastFMAction() {
-        onActionSubject.notify(MoreDetailsUiEvent.OpenLastFM)
+        uiState.cardActual = getLastFMCard()
+        onActionSubject.notify(MoreDetailsUiEvent.OpenSource)
     }
 
     private fun notifyWikipediaAction() {
-        onActionSubject.notify(MoreDetailsUiEvent.OpenWikipedia)
+        uiState.cardActual = getWikipediaCard()
+        onActionSubject.notify(MoreDetailsUiEvent.OpenSource)
     }
 
     private fun notifyNYTAction() {
-        onActionSubject.notify(MoreDetailsUiEvent.OpenNYT)
+        uiState.cardActual = getNYTCard()
+        onActionSubject.notify(MoreDetailsUiEvent.OpenSource)
     }
 
     private fun initObserver() {
@@ -126,7 +141,7 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun initProperties(cards: List<Card>) {
         this.cards = cards
-        cardHandler = CardHandlerImpl(this, cards)
+       // cardHandler = CardHandlerImpl(this, cards)
         updateButtonsStates()
         setButtonsEnable()
     }

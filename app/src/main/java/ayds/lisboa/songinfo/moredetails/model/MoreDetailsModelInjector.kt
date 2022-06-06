@@ -32,6 +32,7 @@ object MoreDetailsModelInjector {
         val nytProxy = NYTProxy(NYInjector.nyInfoService)
         val wkpProxy = WikipediaProxy(WikipediaInjector.wikipediaCardService)
 
+        proxies = mutableListOf()
         proxies.add(lastFMProxy)
         proxies.add(nytProxy)
         proxies.add(wkpProxy)

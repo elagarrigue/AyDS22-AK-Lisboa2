@@ -4,6 +4,6 @@ const val URL_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4
 
 data class MoreDetailsUiState (
     val artistName: String = "",
-    val artistURL: String = "",
+    var actionsEnabled: MutableList<Boolean> = mutableListOf(false, false, false),
 
 )

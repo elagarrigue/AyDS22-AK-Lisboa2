@@ -37,6 +37,7 @@ internal class CardRepositoryImpl(
     private fun saveCardsInDatabase(cards: List<Card>){
         for(card in cards){
             card?.let{
+
                 cardLocalStorage.saveCard(it)
             }
         }

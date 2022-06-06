@@ -35,24 +35,19 @@ internal class MoreDetailsControllerImpl(
 
     override fun searchCard() {
         Thread {
-            searching=true
             moreDetailsModel.searchCard(moreDetailsView.uiState.artistName)
-            searching=false
         }.start()
     }
 
     private fun openLastFM() {
-        if(!searching)
-            moreDetailsView.cardHandler.navigateToLastFMActivity()
+        moreDetailsView.cardHandler.navigateToLastFMActivity()
     }
 
     private fun openWikipedia() {
-        if(!searching)
-            moreDetailsView.cardHandler.navigateToWikipediaActivity()
+        moreDetailsView.cardHandler.navigateToWikipediaActivity()
     }
 
     private fun openNYT() {
-        if(!searching)
-            moreDetailsView.cardHandler.navigateToNYTActivity()
+        moreDetailsView.cardHandler.navigateToNYTActivity()
     }
 }

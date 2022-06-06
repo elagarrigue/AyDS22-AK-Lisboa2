@@ -11,6 +11,7 @@ import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModel
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModelInjector
 import ayds.lisboa.songinfo.moredetails.model.Source
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
+import ayds.lisboa.songinfo.moredetails.model.entities.CardImpl
 import ayds.lisboa.songinfo.moredetails.model.entities.EmptyCard
 import ayds.lisboa.songinfo.utils.UtilsInjector
 import ayds.lisboa.songinfo.utils.navigation.NavigationUtils
@@ -74,6 +75,8 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         initListener()
         initObserver()
         notifySearchAction()
+
+
     }
 
     private fun initViews() {
@@ -81,6 +84,9 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         lastFMButton = findViewById<View>(R.id.buttonLastFM) as Button
         wikipediaButton = findViewById<View>(R.id.buttonWikipedia) as Button
         NYTButton = findViewById<View>(R.id.buttonNYT) as Button
+        lastFMButton.isEnabled= false
+        wikipediaButton.isEnabled= false
+        NYTButton.isEnabled= false
     }
 
     private fun initMoreDetailsModel() {
@@ -121,8 +127,28 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     private fun initProperties(cards: List<Card>) {
         this.cards = cards
         cardHandler = CardHandlerImpl(this, cards)
+        updateButtonsStates()
+        setButtonsEnable()
     }
 
+    private fun updateButtonsStates(){
+        for(i in cards.indices) {
+            when (cards[i]) {
+                is CardImpl -> uiState.actionsEnabled[i] = true
+                EmptyCard -> uiState.actionsEnabled[i] = false
+            }
+            if(cards[i].description.isEmpty())
+                uiState.actionsEnabled[i] = false
+        }
+    }
+
+    private fun setButtonsEnable(){
+        runOnUiThread {
+            lastFMButton.isEnabled=uiState.actionsEnabled[0]
+            NYTButton.isEnabled=uiState.actionsEnabled[1]
+            wikipediaButton.isEnabled=uiState.actionsEnabled[2]
+        }
+    }
     private fun notifySearchAction() {
         onActionSubject.notify(MoreDetailsUiEvent.Search)
     }

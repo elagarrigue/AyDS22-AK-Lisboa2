@@ -24,7 +24,6 @@ internal class CardRepositoryImpl(
                 saveCardsInDatabase(artistsCards)
             }
         }
-
         return artistsCards
     }
 
@@ -36,8 +35,7 @@ internal class CardRepositoryImpl(
 
     private fun saveCardsInDatabase(cards: List<Card>){
         for(card in cards){
-            card?.let{
-
+            card.let{
                 cardLocalStorage.saveCard(it)
             }
         }

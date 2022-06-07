@@ -10,12 +10,12 @@ private const val FONT = "<font face=\"arial\">"
 
 interface CardFormatter {
 
-    fun getStringArtistInfo(artist: Card) : String
+    fun getStringCardInfo(artist: Card) : String
 }
 
 internal class CardFormatterImpl: CardFormatter{
 
-    override fun getStringArtistInfo(card: Card): String {
+    override fun getStringCardInfo(card: Card): String {
         var artistInfo: String = addLineBreaks(card.description)
         artistInfo = textToHtml(artistInfo, card.artistName)
         artistInfo = addPrefix(card.isLocallyStored, artistInfo)

@@ -16,13 +16,10 @@ private const val LOCAL_DATABASE_PREFIX = "[*]"
 class CardActivity : AppCompatActivity() {
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
-    private lateinit var textPaneArtistBio: TextView
+    private lateinit var textPaneArticle: TextView
     private lateinit var imageView: ImageView
     private lateinit var textPaneSource: TextView
     private lateinit var openURLButton: Button
-
-    //VER LO DE APLICARLE AL FORMATO A LA DESCRIPCION
-    private var cardFormatter: CardFormatter = MoreDetailsViewInjector.cardFormatter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +31,7 @@ class CardActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        textPaneArtistBio = findViewById(R.id.textPane2)
+        textPaneArticle = findViewById(R.id.textPaneArticle)
         imageView = findViewById<View>(R.id.imageView) as ImageView
         textPaneSource = findViewById(R.id.textSource)
         openURLButton = findViewById<View>(R.id.openUrlButton) as Button
@@ -49,7 +46,7 @@ class CardActivity : AppCompatActivity() {
     }
 
     private fun updateViews() {
-        textPaneArtistBio.text = getDescription()
+        textPaneArticle.text = getDescription()
         textPaneSource.text = getSource()
         setImage()
     }

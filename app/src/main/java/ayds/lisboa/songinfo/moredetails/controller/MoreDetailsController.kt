@@ -16,7 +16,6 @@ internal class MoreDetailsControllerImpl(
 ) : MoreDetailsController {
 
     private lateinit var moreDetailsView: MoreDetailsView
-    private var searching = false
 
     override fun setMoreDetailsView(moreDetailsView: MoreDetailsView) {
         this.moreDetailsView = moreDetailsView

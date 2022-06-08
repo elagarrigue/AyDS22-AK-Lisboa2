@@ -1,6 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.model.repository
 
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
+import ayds.lisboa.songinfo.moredetails.model.entities.CardImpl
 import ayds.lisboa.songinfo.moredetails.model.repository.external.Broker
 import ayds.lisboa.songinfo.moredetails.model.repository.external.BrokerImpl
 import ayds.lisboa.songinfo.moredetails.model.repository.external.proxies.ServiceProxy
@@ -18,10 +19,10 @@ class BrokerTest {
     )
 
     private val broker: Broker = BrokerImpl(listProxies)
-/*
+
     @Test
     fun `broker`() {
-        val card: Card = mockk()
+        val card: CardImpl = mockk()
         val cards: List<Card> = arrayListOf(
             card, card, card
         )
@@ -30,5 +31,5 @@ class BrokerTest {
         val result = broker.getCards("name")
 
         assertEquals(cards, result)
-    }*/
+    }
 }

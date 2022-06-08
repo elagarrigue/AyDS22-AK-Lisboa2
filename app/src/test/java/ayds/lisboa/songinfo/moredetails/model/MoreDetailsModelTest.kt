@@ -24,7 +24,7 @@ class MoreDetailsModelTest {
             cardTester(it)
         }
 
-        moreDetailsModel.searchCard("name")
+        moreDetailsModel.searchCards("name")
 
         verify { cardTester(cards) }
     }

@@ -22,7 +22,7 @@ class CardFormatterTester {
             true
         )
 
-        val result = cardFormatter.getStringArtistInfo(card)
+        val result = cardFormatter.getStringCardInfo(card)
 
         val expected =
             "[*]<html><div width=400><font face=\"arial\">this is the artist description</font></div></html>"
@@ -41,7 +41,7 @@ class CardFormatterTester {
             false
         )
 
-        val result = cardFormatter.getStringArtistInfo(card)
+        val result = cardFormatter.getStringCardInfo(card)
 
         val expected =
             "<html><div width=400><font face=\"arial\">this is the artist description</font></div></html>"
@@ -53,7 +53,7 @@ class CardFormatterTester {
     fun `given a non existing artist it should return the artist not found description`() {
         val card: Card = EmptyCard
 
-        val result = cardFormatter.getStringArtistInfo(card)
+        val result = cardFormatter.getStringCardInfo(card)
 
         val expected = "<html><div width=400><font face=\"arial\"></font></div></html>"
 

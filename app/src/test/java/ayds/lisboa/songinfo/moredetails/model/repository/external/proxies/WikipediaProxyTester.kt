@@ -15,7 +15,7 @@ class WikipediaProxyTester {
     private val wkpProxy : WikipediaProxy = WikipediaProxy(wikipediaServ)
 
     @Test
-    fun `proxy`() {
+    fun `given an artistName, should return information from WikipediaService`() {
 
         val card = CardImpl(
             "name",

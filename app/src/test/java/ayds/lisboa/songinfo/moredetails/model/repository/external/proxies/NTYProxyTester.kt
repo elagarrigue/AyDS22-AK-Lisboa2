@@ -16,7 +16,7 @@ class NYTProxyTester {
     private val nytProxy : NYTProxy = NYTProxy(nytService)
 
     @Test
-    fun `proxy`() {
+    fun `given an artistName, should return information from NYTService`() {
 
         val card = CardImpl(
             "name",

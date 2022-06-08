@@ -16,7 +16,7 @@ class LastFMProxyTester {
     private val lastfmProxy : LastFMProxy = LastFMProxy(lastFM)
 
     @Test
-    fun `proxy`() {
+    fun `given an artistName, should return information from lastFMService`() {
 
         val card = CardImpl(
             "name",

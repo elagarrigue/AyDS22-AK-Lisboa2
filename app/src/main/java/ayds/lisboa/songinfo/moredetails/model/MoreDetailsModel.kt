@@ -9,17 +9,16 @@ interface  MoreDetailsModel {
 
     val cardObservable: Observable<List<Card>>
 
-    fun searchCard(name: String)
+    fun searchCards(name: String)
 }
 
 internal class MoreDetailsModelImpl(private val repository: CardRepository) : MoreDetailsModel {
 
     override val cardObservable = Subject<List<Card>>()
 
-    override fun searchCard(name: String) {
+    override fun searchCards(name: String) {
         repository.getCardsByName(name).let {
             cardObservable.notify(it)
         }
     }
 }
-

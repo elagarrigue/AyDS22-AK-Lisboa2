@@ -4,17 +4,17 @@ import ayds.lisboa.songinfo.moredetails.model.Source
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
 import ayds.lisboa.songinfo.moredetails.model.entities.CardImpl
 import ayds.lisboa.songinfo.moredetails.model.entities.EmptyCard
-import ayds.winchester1.wikipedia.WikipediaCardService
+import ayds.winchester1.wikipedia.WikipediaService
 
 internal class WikipediaProxy (
-    private val wkpService: WikipediaCardService
+    private val wkpService: WikipediaService
 ): ServiceProxy {
 
     override fun getInfo(name: String): Card {
         var wkpCard: Card? = null
 
         try {
-            val artistInfoCard = wkpService.getCard(name)
+            val artistInfoCard = wkpService.getArtistInfo(name)
 
             if(artistInfoCard != null) {
                 wkpCard = CardImpl(

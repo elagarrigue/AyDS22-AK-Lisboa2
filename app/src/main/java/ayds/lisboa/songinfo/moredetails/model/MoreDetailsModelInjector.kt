@@ -30,7 +30,7 @@ object MoreDetailsModelInjector {
         )
         val lastFMProxy = LastFMProxy(LastFMInjector.lastFMService)
         val nytProxy = NYTProxy(NYInjector.nyInfoService)
-        val wkpProxy = WikipediaProxy(WikipediaInjector.wikipediaCardService)
+        val wkpProxy = WikipediaProxy(WikipediaInjector.wikipediaService)
 
         proxies = mutableListOf()
         proxies.add(lastFMProxy)

@@ -1,7 +1,5 @@
 package ayds.lisboa.songinfo.moredetails.model.entities
 
-import ayds.lisboa.songinfo.moredetails.model.Source
-
 
 interface Card {
     val artistName: String

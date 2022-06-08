@@ -1,6 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.model.repository.external.proxies
 
-import ayds.lisboa.songinfo.moredetails.model.Source
+import ayds.lisboa.songinfo.moredetails.model.entities.Source
 import ayds.lisboa.songinfo.moredetails.model.entities.CardImpl
 import ayds.winchester1.wikipedia.WikipediaArtistInfo
 import ayds.winchester1.wikipedia.WikipediaService

@@ -9,7 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModel
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModelInjector
-import ayds.lisboa.songinfo.moredetails.model.Source
+import ayds.lisboa.songinfo.moredetails.model.entities.Source
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
 import ayds.lisboa.songinfo.moredetails.model.entities.CardImpl
 import ayds.lisboa.songinfo.moredetails.model.entities.EmptyCard

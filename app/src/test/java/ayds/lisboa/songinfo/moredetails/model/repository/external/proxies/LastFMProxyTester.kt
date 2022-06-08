@@ -1,6 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.model.repository.external.proxies
 
-import ayds.lisboa.songinfo.moredetails.model.Source
+import ayds.lisboa.songinfo.moredetails.model.entities.Source
 import ayds.lisboa.songinfo.moredetails.model.entities.CardImpl
 import ayds.lisboa2.lastFM.LASTFM_LOGO
 import ayds.lisboa2.lastFM.LastFMArtist

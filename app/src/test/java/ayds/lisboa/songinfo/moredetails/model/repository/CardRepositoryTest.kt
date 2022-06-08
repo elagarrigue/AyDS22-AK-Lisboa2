@@ -1,6 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.model.repository
 
-import ayds.lisboa.songinfo.moredetails.model.Source
+import ayds.lisboa.songinfo.moredetails.model.entities.Source
 import ayds.lisboa.songinfo.moredetails.model.entities.Card
 import ayds.lisboa.songinfo.moredetails.model.entities.CardImpl
 import ayds.lisboa.songinfo.moredetails.model.repository.external.Broker
@@ -10,7 +10,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Assert.*
 import org.junit.Test
-import java.lang.Exception
 
 class CardRepositoryTest {
 

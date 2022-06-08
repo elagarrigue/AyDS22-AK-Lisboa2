@@ -12,27 +12,17 @@ internal class BrokerImpl(
     private val proxies: List<ServiceProxy>
 ): Broker {
 
-    private lateinit var artistName: String
-    private var cards: MutableList<Card> = mutableListOf()
-
     override fun getCards(name: String): List<Card> {
-        this.artistName = name
-        getCardsFromProxies()
-
+        var cards: MutableList<Card> = mutableListOf()
+        proxies.forEach {
+            makeCardsList(it.getInfo(name),cards)
+        }
         return cards
     }
 
-    private fun getCardsFromProxies() {
-        proxies.forEach {
-            makeCardsList(getProxysCard(it))
-        }
-    }
-
-    private fun getProxysCard(serviceProxy: ServiceProxy): Card = serviceProxy.getInfo(this.artistName)
-
-    private fun makeCardsList(card: Card) {
+    private fun makeCardsList(card: Card, cards: MutableList<Card>) {
         when (card) {
-            is CardImpl -> this.cards.add(card)
+            is CardImpl -> cards.add(card)
         }
     }
 }

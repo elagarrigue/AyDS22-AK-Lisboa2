@@ -33,8 +33,6 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     private lateinit var moreDetailsModel: MoreDetailsModel
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
-    //private var cardFormatter: CardFormatter = MoreDetailsViewInjector.cardFormatter
-
     private lateinit var textView: TextView
     private lateinit var lastFMButton: Button
     private lateinit var wikipediaButton: Button
@@ -50,6 +48,7 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         intent.putExtra(CardActivity.SOURCE_EXTRA, card.source.toString())
         intent.putExtra(CardActivity.SOURCE_LOGO_EXTRA, card.sourceLogoUrl)
         intent.putExtra(CardActivity.IS_LOCALLY_STORED_EXTRA, card.isLocallyStored)
+        intent.putExtra(CardActivity.ARTIST_NAME_EXTRA, card.artistName)
         startActivity(intent)
     }
 

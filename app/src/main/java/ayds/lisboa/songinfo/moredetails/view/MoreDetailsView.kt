@@ -76,8 +76,8 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
             )
         )
         infoButtons[0].isEnabled= false
-        infoButtons[0].isEnabled= false
-        infoButtons[0].isEnabled= false
+        infoButtons[1].isEnabled= false
+        infoButtons[2].isEnabled= false
     }
 
     private fun initMoreDetailsModel() {

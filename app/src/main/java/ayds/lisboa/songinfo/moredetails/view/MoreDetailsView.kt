@@ -34,9 +34,9 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
     private lateinit var textView: TextView
-    private lateinit var lastFMButton: Button
-    private lateinit var wikipediaButton: Button
-    private lateinit var NYTButton: Button
+
+
+    private var infoButtons : MutableList<Button> = mutableListOf()
 
     override val uiEventObservable: Observable<MoreDetailsUiEvent> = onActionSubject
     override var uiState: MoreDetailsUiState = MoreDetailsUiState()
@@ -70,12 +70,17 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun initViews() {
         textView = findViewById(R.id.textView)
-        lastFMButton = findViewById<View>(R.id.buttonLastFM) as Button
-        wikipediaButton = findViewById<View>(R.id.buttonWikipedia) as Button
-        NYTButton = findViewById<View>(R.id.buttonNYT) as Button
-        lastFMButton.isEnabled= false
-        wikipediaButton.isEnabled= false
-        NYTButton.isEnabled= false
+
+        infoButtons.addAll(
+            listOf(
+                findViewById<View>(R.id.buttonLastFM) as Button,
+                findViewById<View>(R.id.buttonWikipedia) as Button,
+                findViewById<View>(R.id.buttonNYT) as Button
+            )
+        )
+        infoButtons[0].isEnabled= false
+        infoButtons[0].isEnabled= false
+        infoButtons[0].isEnabled= false
     }
 
     private fun initMoreDetailsModel() {
@@ -91,37 +96,15 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         intent.getStringExtra(ARTIST_NAME_EXTRA)?:""
 
     private fun initListener() {
-        lastFMButton.setOnClickListener { notifyLastFMAction() }
-        wikipediaButton.setOnClickListener { notifyWikipediaAction() }
-        NYTButton.setOnClickListener { notifyNYTAction() }
+        for(i in infoButtons.indices) {
+            infoButtons[i].setOnClickListener { notifyInfoAction(i) }
+        }
     }
 
-    private fun notifyLastFMAction() {
-        uiState.cardActual = getLastFMCard()
+
+    private fun notifyInfoAction(i : Int) {
+        uiState.cardActual = uiState.getCard(i)
         onActionSubject.notify(MoreDetailsUiEvent.OpenSource)
-    }
-
-    private fun notifyWikipediaAction() {
-        uiState.cardActual = getWikipediaCard()
-        onActionSubject.notify(MoreDetailsUiEvent.OpenSource)
-    }
-
-    private fun notifyNYTAction() {
-        uiState.cardActual = getNYTCard()
-        onActionSubject.notify(MoreDetailsUiEvent.OpenSource)
-    }
-
-
-    private fun getLastFMCard() : Card {
-        return uiState.cards.firstOrNull{it.source == Source.LASTFM} ?: EmptyCard
-    }
-
-    private fun getWikipediaCard() : Card {
-        return uiState.cards.firstOrNull{it.source == Source.WIKIPEDIA} ?: EmptyCard
-    }
-
-    private fun getNYTCard() : Card {
-        return uiState.cards.firstOrNull{it.source == Source.NEWYORKTIMES} ?: EmptyCard
     }
 
     private fun initObserver() {
@@ -148,9 +131,9 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
 
     private fun setButtonsEnable(){
         runOnUiThread {
-            lastFMButton.isEnabled=uiState.actionsEnabled[0]
-            NYTButton.isEnabled=uiState.actionsEnabled[1]
-            wikipediaButton.isEnabled=uiState.actionsEnabled[2]
+            for(i in infoButtons.indices) {
+                infoButtons[i].isEnabled = uiState.actionsEnabled[i]
+            }
         }
     }
     private fun notifySearchAction() {

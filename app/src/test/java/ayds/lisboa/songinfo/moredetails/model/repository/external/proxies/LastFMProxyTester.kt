@@ -2,6 +2,7 @@ package ayds.lisboa.songinfo.moredetails.model.repository.external.proxies
 
 import ayds.lisboa.songinfo.moredetails.model.entities.Source
 import ayds.lisboa.songinfo.moredetails.model.entities.CardImpl
+import ayds.lisboa.songinfo.moredetails.model.entities.EmptyCard
 import ayds.lisboa2.lastFM.LASTFM_LOGO
 import ayds.lisboa2.lastFM.LastFMArtist
 import ayds.lisboa2.lastFM.LastFMService
@@ -36,5 +37,23 @@ class LastFMProxyTester {
 
         val result = lastfmProxy.getInfo("name")
         Assert.assertEquals(card, result)
+    }
+
+    @Test
+    fun `given an artistName that is not in the service, should return EmptyCard`() {
+        every { lastFM.getArtist("name") } returns null
+
+        val result = lastfmProxy.getInfo("name")
+
+        Assert.assertEquals(EmptyCard, result)
+    }
+
+    @Test
+    fun `given a service exception, should return EmptyCard`() {
+        every { lastFM.getArtist("name") } throws mockk<Exception>()
+
+        val result = lastfmProxy.getInfo("name")
+
+        Assert.assertEquals(EmptyCard, result)
     }
 }

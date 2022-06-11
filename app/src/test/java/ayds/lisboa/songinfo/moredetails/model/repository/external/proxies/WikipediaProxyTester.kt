@@ -2,6 +2,7 @@ package ayds.lisboa.songinfo.moredetails.model.repository.external.proxies
 
 import ayds.lisboa.songinfo.moredetails.model.entities.Source
 import ayds.lisboa.songinfo.moredetails.model.entities.CardImpl
+import ayds.lisboa.songinfo.moredetails.model.entities.EmptyCard
 import ayds.winchester1.wikipedia.WikipediaArtistInfo
 import ayds.winchester1.wikipedia.WikipediaService
 import io.mockk.every
@@ -35,5 +36,23 @@ class WikipediaProxyTester {
 
         val result = wkpProxy.getInfo("name")
         Assert.assertEquals(card, result)
+    }
+
+    @Test
+    fun `given an artistName that is not in the service, should return EmptyCard`() {
+        every { wikipediaServ.getArtistInfo("name") } returns null
+
+        val result = wkpProxy.getInfo("name")
+
+        Assert.assertEquals(EmptyCard, result)
+    }
+
+    @Test
+    fun `given a service exception, should return EmptyCard`() {
+        every { wikipediaServ.getArtistInfo("name") } throws mockk<Exception>()
+
+        val result = wkpProxy.getInfo("name")
+
+        Assert.assertEquals(EmptyCard, result)
     }
 }

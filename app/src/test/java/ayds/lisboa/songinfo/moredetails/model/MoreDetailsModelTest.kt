@@ -1,8 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.model
 
-
-import ayds.lisboa.songinfo.moredetails.model.entities.Artist
-import ayds.lisboa.songinfo.moredetails.model.repository.ArtistInfoRepository
+import ayds.lisboa.songinfo.moredetails.model.entities.Card
+import ayds.lisboa.songinfo.moredetails.model.repository.CardRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -10,7 +9,7 @@ import org.junit.Test
 
 class MoreDetailsModelTest {
 
-    private val repository: ArtistInfoRepository = mockk()
+    private val repository: CardRepository = mockk()
 
     private val moreDetailsModel: MoreDetailsModel by lazy {
         MoreDetailsModelImpl(repository)
@@ -18,15 +17,15 @@ class MoreDetailsModelTest {
 
     @Test
     fun `on search artist it should notify the result`() {
-        val artist: Artist = mockk()
-        every { repository.getArtistByName("name") } returns artist
-        val artistTester: (Artist) -> Unit = mockk(relaxed = true)
-        moreDetailsModel.artistObservable.subscribe {
-            artistTester(it)
+        val cards: List<Card> = mockk()
+        every { repository.getCardsByName("name") } returns cards
+        val cardTester: (List<Card>) -> Unit = mockk(relaxed = true)
+        moreDetailsModel.cardObservable.subscribe {
+            cardTester(it)
         }
 
-        moreDetailsModel.searchArtist("name")
+        moreDetailsModel.searchCards("name")
 
-        verify { artistTester(artist) }
+        verify { cardTester(cards) }
     }
 }

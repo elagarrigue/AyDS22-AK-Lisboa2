@@ -8,7 +8,7 @@ import ayds.observer.Observer
 
 interface MoreDetailsController {
     fun setMoreDetailsView(moreDetailsView: MoreDetailsView)
-    fun searchArtist()
+    fun searchCard()
 }
 
 internal class MoreDetailsControllerImpl(
@@ -25,18 +25,18 @@ internal class MoreDetailsControllerImpl(
     private val observer: Observer<MoreDetailsUiEvent> =
         Observer { value ->
             when (value) {
-                MoreDetailsUiEvent.Search -> searchArtist()
-                is MoreDetailsUiEvent.OpenURL -> openURL()
+                MoreDetailsUiEvent.Search -> searchCard()
+                MoreDetailsUiEvent.OpenSource -> openSource()
             }
         }
 
-    override fun searchArtist() {
+    override fun searchCard() {
         Thread {
-            moreDetailsModel.searchArtist(moreDetailsView.uiState.artistName)
+            moreDetailsModel.searchCards(moreDetailsView.uiState.artistName)
         }.start()
     }
 
-    private fun openURL() {
-        moreDetailsView.openExternalLink(moreDetailsView.uiState.artistURL)
+    private fun openSource() {
+        moreDetailsView.openCardActivity(moreDetailsView.uiState.cardActual!!)
     }
 }

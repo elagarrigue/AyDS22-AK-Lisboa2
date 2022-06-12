@@ -1,17 +1,15 @@
 package ayds.lisboa.songinfo.moredetails.view
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.TextView
 import android.os.Bundle
 import ayds.lisboa.songinfo.R
-import com.squareup.picasso.Picasso
-import android.text.Html
 import android.view.View
 import android.widget.Button
-import android.widget.ImageView
+import android.widget.TextView
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModel
 import ayds.lisboa.songinfo.moredetails.model.MoreDetailsModelInjector
-import ayds.lisboa.songinfo.moredetails.model.entities.Artist
+import ayds.lisboa.songinfo.moredetails.model.entities.Card
 import ayds.lisboa.songinfo.utils.UtilsInjector
 import ayds.lisboa.songinfo.utils.navigation.NavigationUtils
 import ayds.observer.Observable
@@ -22,6 +20,8 @@ interface MoreDetailsView {
     val uiState: MoreDetailsUiState
 
     fun openExternalLink(url: String)
+
+    fun openCardActivity(card: Card)
 }
 
 internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
@@ -29,14 +29,25 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     private val onActionSubject = Subject<MoreDetailsUiEvent>()
     private lateinit var moreDetailsModel: MoreDetailsModel
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
-    private var artistInfoFormatter: ArtistInfoFormatter = MoreDetailsViewInjector.artistInfoFormatter
 
-    private lateinit var textPaneArtistBio: TextView
-    private lateinit var imageView: ImageView
-    private lateinit var openUrlButton: Button
+    private lateinit var textView: TextView
+
+
+    private var infoButtons : MutableList<Button> = mutableListOf()
 
     override val uiEventObservable: Observable<MoreDetailsUiEvent> = onActionSubject
     override var uiState: MoreDetailsUiState = MoreDetailsUiState()
+
+    override fun openCardActivity(card: Card) {
+        val intent = Intent(this, CardActivity::class.java)
+        intent.putExtra(CardActivity.DESCRIPTION_EXTRA, card.description)
+        intent.putExtra(CardActivity.INFO_URL_EXTRA, card.infoURL)
+        intent.putExtra(CardActivity.SOURCE_EXTRA, card.source.toString())
+        intent.putExtra(CardActivity.SOURCE_LOGO_EXTRA, card.sourceLogoUrl)
+        intent.putExtra(CardActivity.IS_LOCALLY_STORED_EXTRA, card.isLocallyStored)
+        intent.putExtra(CardActivity.ARTIST_NAME_EXTRA, card.artistName)
+        startActivity(intent)
+    }
 
     override fun openExternalLink(url: String) {
         navigationUtils.openExternalUrl(this, url)
@@ -55,9 +66,18 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
     }
 
     private fun initViews() {
-        textPaneArtistBio = findViewById(R.id.textPane2)
-        imageView = findViewById<View>(R.id.imageView) as ImageView
-        openUrlButton = findViewById<View>(R.id.openUrlButton) as Button
+        textView = findViewById(R.id.textView)
+
+        infoButtons.addAll(
+            listOf(
+                findViewById<View>(R.id.buttonLastFM) as Button,
+                findViewById<View>(R.id.buttonWikipedia) as Button,
+                findViewById<View>(R.id.buttonNYT) as Button
+            )
+        )
+        infoButtons[0].isEnabled= false
+        infoButtons[1].isEnabled= false
+        infoButtons[2].isEnabled= false
     }
 
     private fun initMoreDetailsModel() {
@@ -73,43 +93,35 @@ internal class MoreDetailsActivity : AppCompatActivity(), MoreDetailsView {
         intent.getStringExtra(ARTIST_NAME_EXTRA)?:""
 
     private fun initListener() {
-        openUrlButton.setOnClickListener { notifyOpenURLAction() }
+        for(i in infoButtons.indices) {
+            infoButtons[i].setOnClickListener { notifyInfoAction(i) }
+        }
     }
 
-    private fun notifyOpenURLAction() {
-        onActionSubject.notify(MoreDetailsUiEvent.OpenURL)
+
+    private fun notifyInfoAction(i : Int) {
+        uiState.cardActual = uiState.getCard(i)
+        onActionSubject.notify(MoreDetailsUiEvent.OpenSource)
     }
 
     private fun initObserver() {
-        moreDetailsModel.artistObservable
-            .subscribe { value -> setArtistInfoInView(value) }
+        moreDetailsModel.cardObservable
+            .subscribe { value -> initProperties(value) }
     }
 
-    private fun setArtistInfoInView(artist: Artist) {
-        updateArtistURLState(artist)
-        setExternalServiceImg()
-        setArtistBioInTextPane(artist)
+    private fun initProperties(cards: List<Card>) {
+        uiState.initCards(cards)
+        uiState.updateEnabledActions()
+        setButtonsEnable()
     }
 
-    private fun updateArtistURLState(artist: Artist) {
-        uiState = uiState.copy(artistURL = artist.artistURL)
-    }
-
-    private fun setExternalServiceImg() {
+    private fun setButtonsEnable(){
         runOnUiThread {
-            Picasso.get().load(URL_IMAGE).into(imageView)
+            for(i in infoButtons.indices) {
+                infoButtons[i].isEnabled = uiState.cardsStates[i].enable
+            }
         }
     }
-
-    private fun setArtistBioInTextPane(artist: Artist) {
-        runOnUiThread {
-            textPaneArtistBio.text = Html.fromHtml(getStringArtistInfoFromArtistInfoFormatter(artist))
-        }
-    }
-
-    private fun getStringArtistInfoFromArtistInfoFormatter(artist: Artist): String =
-        artistInfoFormatter.getStringArtistInfo(artist)
-
     private fun notifySearchAction() {
         onActionSubject.notify(MoreDetailsUiEvent.Search)
     }

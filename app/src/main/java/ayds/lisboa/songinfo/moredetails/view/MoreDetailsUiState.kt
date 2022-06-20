@@ -18,8 +18,19 @@ data class MoreDetailsUiState (
 
     fun initCards(cards: List<Card>) {
         cardsStates= mutableListOf()
+        addCards(cards)
+        completeWithEmptyCards()
+    }
+
+    private fun addCards(cards: List<Card>){
         for(card in cards){
             cardsStates.add(CardUiState(card,false))
+        }
+    }
+
+    private fun completeWithEmptyCards() {
+        while(cardsStates.size<Source.values().size-1) {
+            cardsStates.add(CardUiState(EmptyCard, false))
         }
     }
 
